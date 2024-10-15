@@ -1,0 +1,709 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>2. Concept Bottleneck Models &#8212; Concept-based Interpretable Deep Learning in Python</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'intro/cbm';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="3. Quantitative metrics" href="metrics.html" />
+    <link rel="prev" title="1. The tale of the deep learning model that failed my driving exam" href="teaser.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/pyc_logo_text.png" class="logo__image only-light" alt="Concept-based Interpretable Deep Learning in Python - Home"/>
+    <script>document.write(`<img src="../_static/pyc_logo_text.png" class="logo__image only-dark" alt="Concept-based Interpretable Deep Learning in Python - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Concept-based Interpretable Deep Learning in Python
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction to Concept-based Interpretability</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="teaser.html">1. The tale of the deep learning model that failed my driving exam</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">2. Concept Bottleneck Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">3. Quantitative metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="accuracy_explainability.html">4. The accuracy-explainability trade-off</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Neural Interpretable Reasoning</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../nir/paradigm.html">5. The “Neural Generation - Symbolic Execution” paradigm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nir/cmr.html">6. Concept-based Memory Reasoning</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/pyc-team/pyc-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/pyc-team/pyc-book/issues/new?title=Issue%20on%20page%20%2Fintro/cbm.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/intro/cbm.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Concept Bottleneck Models</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coding-practice">2.1. Coding practice</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-model-definition-and-training">2.1.1. Step #1: Model definition and training</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-observe-concept-task-relations">2.1.2. Step #2: Observe concept-task relations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-average-effect-of-a-concept-on-the-task">2.1.3. Step #3: Average effect of a concept on the task</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-effect-of-changing-a-concepts-value">2.1.4. Step #4: Effect of changing a concept’s value</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#series-overview">2.2. Series overview</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="concept-bottleneck-models">
+<h1><span class="section-number">2. </span>Concept Bottleneck Models<a class="headerlink" href="#concept-bottleneck-models" title="Permalink to this heading">#</a></h1>
+<p>In the tale of the teenager and the deep learning model, we see the critical gap between how traditional deep learning (DL) models and humans, like the teenager, approach decisions. While both drivers stopped at the intersection, the teenager could explain how she arrived at that conclusion using concepts like the light color and the presence of the ambulance. In contrast, the DL model, despite making the correct decision, lacked a satisfying decision-making process for the driving evaluator, as the model’s answers were based on raw pixel activations. This example highlights the need for developing DL models with a transparent decision-making process like the teenager, especially in high-stakes fields such as medicine (deciding whether to give a certain treatment), finance (deciding whether to approve a loan), and law (checking whether a hiring system is fair).</p>
+<p>From a technical standpoint, the problem can be described as follows: we aim to model a relationship between a set of input variables <span class="math notranslate nohighlight">\(x_i \in \mathcal{X}\)</span> (such as the image of the road) and a set of output variables corresponding to decisions <span class="math notranslate nohighlight">\(y_i \in \mathcal{Y}\)</span> (whether to cross or stop). The DL model in the tale modeled the relationship as <span class="math notranslate nohighlight">\(p(y_i = \text{cross} \mid \mathcal{X} = \text{image’s pixels})\)</span>, directly mapping raw image data to a decision. The teenager, instead, modeled the same problem using <strong>higher-level variables — referred to as “concepts”, like the light color and the ambulance — leading to a more human-interpretable decision-making process</strong>. Her reasoning could be expressed as <span class="math notranslate nohighlight">\(p(y_i = \text{cross} \mid c_1 = \text{light color}, c_2 = \text{ambulance})\)</span>, where the concepts <span class="math notranslate nohighlight">\(c_i \in \mathcal{C}\)</span> provided insight into <strong>how</strong> she made a particular decision.</p>
+<p>One of the most common methods to mimic the teenager’s approach is by factorizing the joint probability as:</p>
+<div class="math notranslate nohighlight">
+\[p(\mathcal{X}, \mathcal{Y}) = p(\mathcal{Y} \mid \mathcal{C}) \cdot p(\mathcal{C} \mid \mathcal{X})\]</div>
+<p>In this formulation, the DL model processes the input features <span class="math notranslate nohighlight">\(\mathcal{X}\)</span> (such as pixels from an image) and maps them to a set of interpretable, high-level variables <span class="math notranslate nohighlight">\(\mathcal{C}\)</span>, known as “concepts.” These concepts are analogous to the reasoning elements identified by the teenager — such as the traffic light color or the presence of an ambulance. The second part of the model then uses these concepts for the downstream prediction <span class="math notranslate nohighlight">\(\mathcal{Y}\)</span> (whether to cross or stop). This class of models is known as <strong>Concept Bottleneck Models (CBMs)</strong> <span id="id1">[<a class="reference internal" href="../bibliography.html#id2" title="Pang Wei Koh, Thao Nguyen, Yew Siang Tang, Stephen Mussmann, Emma Pierson, Been Kim, and Percy Liang. Concept bottleneck models. In International conference on machine learning, 5338–5348. PMLR, 2020.">KNT+20</a>]</span>. CBMs parametrize the conditional distributions with a pair of neural models:</p>
+<ul class="simple">
+<li><p>The concept encoder <span class="math notranslate nohighlight">\(g\)</span> parametrizes the concept distribution (typically a set of independent Bernoulli distributions)</p></li>
+<li><p>The task predictor <span class="math notranslate nohighlight">\(f\)</span> parametrizes the output distribution (typically Bernoulli or categorical)</p></li>
+</ul>
+<p>The set of CBM’s parameters (<span class="math notranslate nohighlight">\(\theta[g]\)</span> and <span class="math notranslate nohighlight">\(\theta_f\)</span>) are usually optimized via gradient descent. As a result, a CBM models the joint distribution <span class="math notranslate nohighlight">\(p(\mathcal{X}, \mathcal{Y})\)</span> as follows:</p>
+<div class="math notranslate nohighlight">
+\[P(\mathcal{X}, \mathcal{Y}) = P(\mathcal{Y} \mid \mathcal{C}; \theta_f) \cdot P(\mathcal{C} \mid \mathcal{X}; \theta_g)\]</div>
+<p>The following coding practice introduces you to implementing CBMs and shows how to query CBMs to understand the model’s decision-making process.</p>
+<section id="coding-practice">
+<h2><span class="section-number">2.1. </span>Coding practice<a class="headerlink" href="#coding-practice" title="Permalink to this heading">#</a></h2>
+<p>In this practice, we implement a Concept Bottleneck Model (CBM) for a simple traffic light scenario where decisions to cross or stop depend on two concepts: the traffic light being green and the presence of an ambulance. The model predicts these concepts and uses them to make decisions. Let’s go through the key steps.</p>
+<section id="step-1-model-definition-and-training">
+<h3><span class="section-number">2.1.1. </span>Step #1: Model definition and training<a class="headerlink" href="#step-1-model-definition-and-training" title="Permalink to this heading">#</a></h3>
+<p>We define a CBM where the model first predicts the concepts (traffic light, ambulance) and then uses those concepts to decide whether to cross. The model optimizes both concept and task predictions using gradient descent.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch_concepts.nn</span> <span class="kn">import</span> <span class="n">ConceptEncoder</span>
+<span class="kn">from</span> <span class="nn">torch_concepts.data</span> <span class="kn">import</span> <span class="n">TrafficLights</span>
+
+<span class="n">emb_size</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">n_epochs</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">1000</span>
+
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">TrafficLights</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">)</span>
+<span class="n">x_train</span><span class="p">,</span> <span class="n">c_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">concept_names</span><span class="p">,</span> <span class="n">task_names</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">x_train</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">c_train</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">y_train</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">concept_names</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">task_names</span>
+
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">x_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">emb_size</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">())</span>
+<span class="n">c_scorer</span> <span class="o">=</span> <span class="n">ConceptEncoder</span><span class="p">(</span><span class="n">in_features</span><span class="o">=</span><span class="n">emb_size</span><span class="p">,</span> <span class="n">out_concept_dimensions</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="n">concept_names</span><span class="p">})</span>
+<span class="n">y_predictor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">c_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">emb_size</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(),</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">emb_size</span><span class="p">,</span> <span class="n">y_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">encoder</span><span class="p">,</span> <span class="n">c_scorer</span><span class="p">,</span> <span class="n">y_predictor</span><span class="p">)</span>
+
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="n">loss_form</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">BCELoss</span><span class="p">()</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">):</span>
+   <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+   <span class="n">emb</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">x_train</span><span class="p">)</span>
+   <span class="n">c_pred</span> <span class="o">=</span> <span class="n">c_scorer</span><span class="p">(</span><span class="n">emb</span><span class="p">)</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">()</span>
+   <span class="n">y_pred</span> <span class="o">=</span> <span class="n">y_predictor</span><span class="p">(</span><span class="n">c_pred</span><span class="p">)</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">()</span>
+
+   <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_form</span><span class="p">(</span><span class="n">c_pred</span><span class="p">,</span> <span class="n">c_train</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">loss_form</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+   <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+   <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+   <span class="k">if</span> <span class="n">epoch</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+       <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">: Loss </span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 0: Loss 0.94
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 100: Loss 0.51
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 200: Loss 0.27
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 300: Loss 0.12
+Epoch 400: Loss 0.07
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 500: Loss 0.05
+Epoch 600: Loss 0.04
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 700: Loss 0.03
+Epoch 800: Loss 0.03
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 900: Loss 0.03
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-2-observe-concept-task-relations">
+<h3><span class="section-number">2.1.2. </span>Step #2: Observe concept-task relations<a class="headerlink" href="#step-2-observe-concept-task-relations" title="Permalink to this heading">#</a></h3>
+<p>We observe how the model predicts whether the car should cross or not based on a sample with a green light and an ambulance.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="kn">from</span> <span class="nn">torch_concepts.base</span> <span class="kn">import</span> <span class="n">ConceptTensor</span>
+
+<span class="c1"># Test on a sample with green light and ambulance</span>
+<span class="n">c_test</span> <span class="o">=</span> <span class="n">ConceptTensor</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]),</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="n">concept_names</span><span class="p">})</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">y_predictor</span><span class="p">(</span><span class="n">c_test</span><span class="p">)</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">()</span>
+
+<span class="n">c_test</span> <span class="o">=</span> <span class="n">ConceptTensor</span><span class="p">(</span><span class="n">c_test</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">,</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="n">concept_names</span><span class="p">})</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">ConceptTensor</span><span class="p">(</span><span class="n">y_pred</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">,</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="n">task_names</span><span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Concepts: </span><span class="si">{</span><span class="n">c_test</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Task: </span><span class="si">{</span><span class="n">y_pred</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Concepts: ConceptTensor([[True, True]])
+Task: ConceptTensor([[False]])
+</pre></div>
+</div>
+</div>
+</div>
+<p>The model correctly identifies that even though the traffic light is green, the presence of an ambulance makes it decide not to cross (task prediction is False).</p>
+</section>
+<section id="step-3-average-effect-of-a-concept-on-the-task">
+<h3><span class="section-number">2.1.3. </span>Step #3: Average effect of a concept on the task<a class="headerlink" href="#step-3-average-effect-of-a-concept-on-the-task" title="Permalink to this heading">#</a></h3>
+<p>We analyze model behavior across the dataset, focusing on cases where the ambulance is or isn’t present.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Analyze crossing probability with/without ambulance</span>
+<span class="n">c_train_no_ambulance</span> <span class="o">=</span> <span class="n">c_train</span><span class="p">[</span><span class="n">c_train</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">c_train_ambulance</span> <span class="o">=</span> <span class="n">c_train</span><span class="p">[</span><span class="n">c_train</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+
+<span class="n">y_pred_no_ambulance</span> <span class="o">=</span> <span class="n">y_predictor</span><span class="p">(</span><span class="n">c_train_no_ambulance</span><span class="p">)</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">y_pred_ambulance</span> <span class="o">=</span> <span class="n">y_predictor</span><span class="p">(</span><span class="n">c_train_ambulance</span><span class="p">)</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">c_train_no_ambulance_green</span> <span class="o">=</span> <span class="n">c_train_no_ambulance</span><span class="p">[</span><span class="n">c_train_no_ambulance</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Green light prob. (no ambulance): </span><span class="si">{</span><span class="n">c_train_no_ambulance_green</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Crossing prob. (no ambulance): </span><span class="si">{</span><span class="n">y_pred_no_ambulance</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Crossing prob. (ambulance): </span><span class="si">{</span><span class="n">y_pred_ambulance</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Green light prob. (no ambulance): 0.5000
+Crossing prob. (no ambulance): 0.2393
+Crossing prob. (ambulance): 0.0001
+</pre></div>
+</div>
+</div>
+</div>
+<p>When there is no ambulance, the model detects a green light in 50% of the cases, and the probability of crossing is around 25%. When an ambulance is present, the model never predicts crossing, as expected.</p>
+</section>
+<section id="step-4-effect-of-changing-a-concepts-value">
+<h3><span class="section-number">2.1.4. </span>Step #4: Effect of changing a concept’s value<a class="headerlink" href="#step-4-effect-of-changing-a-concepts-value" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Modify single sample (green light, no ambulance)</span>
+<span class="n">c_test_green_no_ambulance</span> <span class="o">=</span> <span class="n">ConceptTensor</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]),</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="n">concept_names</span><span class="p">})</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">y_predictor</span><span class="p">(</span><span class="n">c_test_green_no_ambulance</span><span class="p">)</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">()</span>
+
+<span class="n">c_test_green_no_ambulance</span> <span class="o">=</span> <span class="n">ConceptTensor</span><span class="p">(</span><span class="n">c_test_green_no_ambulance</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">,</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="n">concept_names</span><span class="p">})</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">ConceptTensor</span><span class="p">(</span><span class="n">y_pred</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">,</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="n">task_names</span><span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Concepts: </span><span class="si">{</span><span class="n">c_test_green_no_ambulance</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Task: </span><span class="si">{</span><span class="n">y_pred</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Concepts: ConceptTensor([[ True, False]])
+Task: ConceptTensor([[True]])
+</pre></div>
+</div>
+</div>
+</div>
+<p>The model correctly predicts that in the presence of a green light and the absence of an ambulance, the car can cross (task prediction is True).</p>
+</section>
+</section>
+<section id="series-overview">
+<h2><span class="section-number">2.2. </span>Series overview<a class="headerlink" href="#series-overview" title="Permalink to this heading">#</a></h2>
+<p>This blog series introduces key foundational works in concept-based deep learning, designed to be accessible even with just basic knowledge of probability theory and optimization. The content is self-contained, with optional preliminaries for experienced readers. We focus on 10 key topics that provide a broad overview of important advances, with practical relevance for applying these techniques in real-world scenarios.</p>
+<p>Each topic includes concise theory, paired with pen-and-paper examples and hands-on coding exercises. All code examples use PyTorch Concepts (PyC), a library we developed to help researchers quickly implement existing interpretable techniques or develop novel methods.</p>
+<p>In this series we cover the following chapters:</p>
+<ul class="simple">
+<li><p>Chapter 1: Introduction to Concept-based Deep Learning</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./intro"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="teaser.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">1. </span>The tale of the deep learning model that failed my driving exam</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="metrics.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">3. </span>Quantitative metrics</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coding-practice">2.1. Coding practice</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-model-definition-and-training">2.1.1. Step #1: Model definition and training</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-observe-concept-task-relations">2.1.2. Step #2: Observe concept-task relations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-average-effect-of-a-concept-on-the-task">2.1.3. Step #3: Average effect of a concept on the task</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-effect-of-changing-a-concepts-value">2.1.4. Step #4: Effect of changing a concept’s value</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#series-overview">2.2. Series overview</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The PyC Team
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

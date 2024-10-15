@@ -1,0 +1,576 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>3. Quantitative metrics &#8212; Concept-based Interpretable Deep Learning in Python</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'intro/metrics';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="4. The accuracy-explainability trade-off" href="accuracy_explainability.html" />
+    <link rel="prev" title="2. Concept Bottleneck Models" href="cbm.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/pyc_logo_text.png" class="logo__image only-light" alt="Concept-based Interpretable Deep Learning in Python - Home"/>
+    <script>document.write(`<img src="../_static/pyc_logo_text.png" class="logo__image only-dark" alt="Concept-based Interpretable Deep Learning in Python - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Concept-based Interpretable Deep Learning in Python
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction to Concept-based Interpretability</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="teaser.html">1. The tale of the deep learning model that failed my driving exam</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cbm.html">2. Concept Bottleneck Models</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">3. Quantitative metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="accuracy_explainability.html">4. The accuracy-explainability trade-off</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Neural Interpretable Reasoning</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../nir/paradigm.html">5. The “Neural Generation - Symbolic Execution” paradigm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nir/cmr.html">6. Concept-based Memory Reasoning</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">References</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/pyc-team/pyc-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/pyc-team/pyc-book/issues/new?title=Issue%20on%20page%20%2Fintro/metrics.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/intro/metrics.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Quantitative metrics</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#predictive-performance">3.1. 1. Predictive performance</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#task-performance">3.1.1. Task performance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#concept-performance">3.1.2. Concept performance</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#average-concept-effect">3.2. 2. Average concept effect</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intervention-effectiveness">3.3. 3. Intervention effectiveness</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coding-practice-quantitative-metrics-for-concept-based-models">3.4. Coding practice: quantitative metrics for concept-based models</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="quantitative-metrics">
+<h1><span class="section-number">3. </span>Quantitative metrics<a class="headerlink" href="#quantitative-metrics" title="Permalink to this heading">#</a></h1>
+<p>In “The Tale of the Deep Learning Model That Failed My Driving Exam”, we left the driving evaluator puzzled. He watched as the deep learning model correctly stopped at the intersection with a yellow light and an ambulance crossing. However, when he asked the model simple, real-world questions—“What did the model see?”, “What does the model usually do in similar situations when something changes in what it sees?”, and “What should have changed for the model to decide to cross instead?”—he realized the model’s responses were purely technical, focused on pixel values and activations rather than a true understanding of traffic rules or emergency vehicles.</p>
+<p>To help the driving evaluator, in the last chapter, we introduced <strong>Concept Bottleneck Models (CBMs)</strong>. CBMs allow the evaluator to gain insights into the model’s decision-making process; when we asked:</p>
+<ul class="simple">
+<li><p><strong>“What did the model see?”</strong> The CBM identified the traffic light color and the presence of the ambulance.</p></li>
+<li><p><strong>“What does the model usually do in similar situations when something changes?”</strong> The model recognized that if there is an ambulance, it never predicts crossing the intersection.</p></li>
+<li><p><strong>“What should have changed for the model to decide to cross?”</strong> The CBM correctly predicted that the car could have crossed if the ambulance had not been present.</p></li>
+</ul>
+<p>While these qualitative answers reassured the evaluator, he now needs a <strong>quantitative</strong> way to assess how well the model responds in different situations. For this, we use three key metrics in concept-based interpretability: concept/task <strong>predictive performance</strong>, <strong>average concept effect</strong>, and <strong>intervention effectiveness</strong>.</p>
+<section id="predictive-performance">
+<h2><span class="section-number">3.1. </span>1. Predictive performance<a class="headerlink" href="#predictive-performance" title="Permalink to this heading">#</a></h2>
+<section id="task-performance">
+<h3><span class="section-number">3.1.1. </span>Task performance<a class="headerlink" href="#task-performance" title="Permalink to this heading">#</a></h3>
+<p>In the driving test, task performance measures how well the model predicts whether to cross or stop at the intersection, based on concepts like traffic light color and the ambulance. A high task performance indicates that the model generally makes the correct decision. In classification problems, task performance is usually represented as the likelihood:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}(\theta_f, c, y) = \mathbb{E}_{c,y} \ p(y \mid c; \theta_f)\]</div>
+<p><strong>Limitations:</strong> High task performance alone doesn’t guarantee interpretability. The model might achieve high performance by relying on uninterpretable or poorly defined concepts, potentially missing key information. For example, a CBM could correctly predict whether to cross or stop, but its decisions might be unaffected by changing the value of the concept “ambulance”.</p>
+</section>
+<section id="concept-performance">
+<h3><span class="section-number">3.1.2. </span>Concept performance<a class="headerlink" href="#concept-performance" title="Permalink to this heading">#</a></h3>
+<p>Concept performance measures how well the model correctly predicts the concepts from the input data. In our driving example, this evaluates how well the model detects traffic light color or the ambulance’s presence. Similarly to task performance, concept performance can be measured as the likelihood:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}(\theta_g, x, c) = \mathbb{E}_{x,c} \ p(c \mid x; \theta_g)\]</div>
+<p><strong>Limitations:</strong> While high concept performance means the model can correctly identify the traffic light color and ambulance presence, it doesn’t always imply that the model will make the right final decision. For example, even if the model accurately identifies a green light and no ambulance, it might still incorrectly predict that the car should stop.</p>
+</section>
+</section>
+<section id="average-concept-effect">
+<h2><span class="section-number">3.2. </span>2. Average concept effect<a class="headerlink" href="#average-concept-effect" title="Permalink to this heading">#</a></h2>
+<p>The Average Concept Effect (also known as “Causal Concept Effect” or “Average Treatment Effect”) quantifies how individual concepts affect the model’s decisions. It measures how much a particular concept, such as the ambulance’s presence, directly impacts the model’s prediction of whether to cross or stop. ACE can be computed as the difference in expected values when fixing the value of a concept <span class="math notranslate nohighlight">\(c_i\)</span> to two different values “a” and “b”:</p>
+<div class="math notranslate nohighlight">
+\[\text{ACE}(f, c, y, i, a, b) = \mathbb{E}_{c,y} \ p(y \mid \mathcal{C} \setminus c_i, do(c_i = a); \theta_f) - \mathbb{E}_{c,y} \ p(y \mid \mathcal{C} \setminus c_i, do(c_i = b); \theta_f)\]</div>
+<p>In the driving test, ACE would quantify the effect of changing the ambulance’s status from absent <span class="math notranslate nohighlight">\((b = 0)\)</span> to present <span class="math notranslate nohighlight">\((a = 1)\)</span> on the model’s decision to stop. A high ACE value indicates that the concept of an ambulance has a strong influence on the final decision.</p>
+<p><strong>Limitations:</strong> ACE assumes that changing a concept’s value from “a” to “b” (e.g., changing the value of “ambulance” from present to absent) is feasible and meaningful. However, not all concepts are easily (or immediately) manipulable in every context, such as personal attributes like gender. This metric also only evaluates the direct influence of a concept on the task, while in some real-world cases the influence of a concept might be mediated by another concept. For example, in the driving scenario, consider the concepts “road visibility” and “driver alertness,” with the task outcome being “whether the car should stop”. Here, we could expect road visibility to affect driver alertness, which in turn affects whether to stop. However, we would not expect “road visibility” to directly cause “whether the car should stop”. Thus, ACE might miss the indirect influence of road visibility on the stopping decision, as it focuses only on direct relationships.</p>
+</section>
+<section id="intervention-effectiveness">
+<h2><span class="section-number">3.3. </span>3. Intervention effectiveness<a class="headerlink" href="#intervention-effectiveness" title="Permalink to this heading">#</a></h2>
+<p>Intervention effectiveness measures how changing the value of a concept for a given sample (e.g., toggling the ambulance’s presence) impacts the model’s final decision. For this reason, this metric can be used to assess whether human experts can effectively interact with the model and influence its predictions. One approach to measure intervention effectiveness is to assess the improvement in task performance after correcting mispredicted concepts by changing their values from <span class="math notranslate nohighlight">\(c\)</span> to <span class="math notranslate nohighlight">\(c'\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{Q}(\theta_f, c, y) = \mathbb{E}_{c,y} \ p(y \mid c'; \theta_f) - \mathbb{E}_{c,y} \ p(y \mid c; \theta_f)\]</div>
+<p>In the driving test scenario, imagine the model incorrectly predicts that the ambulance is absent, leading to a wrong decision to cross. This metric would evaluate whether correcting the concept by setting “ambulance = 1” leads the model to change its prediction to the correct one (i.e., stopping). After this human intervention, we expect the model to revise its decision and recommend stopping the car.</p>
+<p>Intervention effectiveness is particularly useful when human experts need to intervene and adjust concept values to improve the model’s decisions, ensuring the model responds accurately after corrections.</p>
+<p><strong>Limitations:</strong> This metric is highly dependent on the quality of the interventions provided by humans. Poorly chosen interventions can reduce the model’s performance, even if the concepts themselves are correct.</p>
+</section>
+<section id="coding-practice-quantitative-metrics-for-concept-based-models">
+<h2><span class="section-number">3.4. </span>Coding practice: quantitative metrics for concept-based models<a class="headerlink" href="#coding-practice-quantitative-metrics-for-concept-based-models" title="Permalink to this heading">#</a></h2>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./intro"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="cbm.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">2. </span>Concept Bottleneck Models</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="accuracy_explainability.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">4. </span>The accuracy-explainability trade-off</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#predictive-performance">3.1. 1. Predictive performance</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#task-performance">3.1.1. Task performance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#concept-performance">3.1.2. Concept performance</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#average-concept-effect">3.2. 2. Average concept effect</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intervention-effectiveness">3.3. 3. Intervention effectiveness</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coding-practice-quantitative-metrics-for-concept-based-models">3.4. Coding practice: quantitative metrics for concept-based models</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The PyC Team
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
