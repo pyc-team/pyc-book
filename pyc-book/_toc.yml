@@ -1,0 +1,22 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: intro
+parts:
+  - caption: "Introduction to Concept-based Interpretability"
+    numbered: true
+    chapters:
+      - file: intro/teaser
+      - file: intro/cbm
+      - file: intro/metrics
+      - file: intro/accuracy_explainability
+  - caption: "Neural Interpretable Reasoning"
+    numbered: true
+    chapters:
+      - file: nir/paradigm
+      - file: nir/cmr
+  - caption: "References"
+    numbered: false
+    chapters:
+      - file: bibliography
