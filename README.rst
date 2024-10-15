@@ -26,5 +26,5 @@ To check local changes:
 2. Open the ``_build/html/index.html`` file in your browser.
 
 To check the changes online:
-1. Run the following command: ``ghp-import -n -p -f _build/html``.
-2. Open the GitHub Pages link [https://pyc-team.github.io/pyc-book/](https://pyc-team.github.io/pyc-book/).
+1. Run the following command: ``ghp-import -n -p -f -o _build/html``.
+2. Open the GitHub Pages link <https://pyc-team.github.io/pyc-book/>.
