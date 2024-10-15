@@ -22,9 +22,11 @@ Contributing
 7. Once the pull request is approved, it will be merged into the ``dev`` branch (and eventually into the ``main`` branch).
 
 To check local changes:
+
 1. Run the following command: ``jupyter-book build .``.
 2. Open the ``_build/html/index.html`` file in your browser.
 
 To check the changes online:
+
 1. Run the following command: ``ghp-import -n -p -f -o _build/html``.
-2. Open the GitHub Pages link <https://pyc-team.github.io/pyc-book/>.
+2. Open the GitHub Pages link https://pyc-team.github.io/pyc-book/.
