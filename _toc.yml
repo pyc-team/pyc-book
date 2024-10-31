@@ -7,15 +7,20 @@ parts:
   - caption: "Introduction to Concept-based Interpretability"
     numbered: true
     chapters:
-      - file: intro/chapter01_teaser
-      - file: intro/chapter02_cbm
-      - file: intro/chapter03_metrics
-      - file: intro/chapter04_accuracy_explanation
+      - file: part01_intro/chapter01_teaser
+      - file: part01_intro/chapter02_cbm
+      - file: part01_intro/chapter03_metrics
+      - file: part01_intro/chapter04_accuracy_explainability
+  - caption: "Causality for Concept-based Interpretability"
+    numbered: true
+    chapters:
+      - file: part02_causality/chapter01_teaser
+      - file: part02_causality/chapterX_cace
   - caption: "Neural Interpretable Reasoning"
     numbered: true
     chapters:
-      - file: nir/paradigm
-      - file: nir/cmr
+      - file: part03_nir/chapter01_teaser
+      - file: part03_nir/chapterX_cmr
   - caption: "References"
     numbered: false
     chapters:
