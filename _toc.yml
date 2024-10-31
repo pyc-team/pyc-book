@@ -7,10 +7,10 @@ parts:
   - caption: "Introduction to Concept-based Interpretability"
     numbered: true
     chapters:
-      - file: intro/teaser
-      - file: intro/cbm
-      - file: intro/metrics
-      - file: intro/accuracy_explainability
+      - file: intro/chapter01_teaser
+      - file: intro/chapter02_cbm
+      - file: intro/chapter03_metrics
+      - file: intro/chapter04_accuracy_explanation
   - caption: "Neural Interpretable Reasoning"
     numbered: true
     chapters:
