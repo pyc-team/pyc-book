@@ -31,3 +31,11 @@ To check the changes online:
 
 1. Run the following command: ``ghp-import -n -p -f -o _build/html``.
 2. Open the GitHub Pages link https://pyc-team.github.io/pyc-book/.
+
+
+To generate a book in PDF format using LaTeX:
+
+1. Install latex by running (Linux) ``sudo apt-get install texlive-latex-extra texlive-fonts-extra texlive-xetex latexmk``
+2. If you just want to generate the latex files, run the following command: ``jupyter-book build . --builder latex``.
+3. If you want to generate a PDF, run following command: ``jupyter-book build . --builder pdflatex``.
+4. Open the ``_build/latex/book.pdf`` file in your PDF viewer.
