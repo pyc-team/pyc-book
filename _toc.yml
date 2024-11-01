@@ -21,7 +21,11 @@ parts:
     chapters:
       - file: part03_nir/chapter01_teaser
       - file: part03_nir/chapterX_cmr
-  - caption: "References"
+  - caption:
     numbered: false
     chapters:
       - file: bibliography
+  - caption:
+    numbered: false
+    chapters:
+      - file: authors
