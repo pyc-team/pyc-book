@@ -39,3 +39,29 @@ To generate a book in PDF format using LaTeX:
 2. If you just want to generate the latex files, run the following command: ``jupyter-book build . --builder latex``.
 3. If you want to generate a PDF, run following command: ``jupyter-book build . --builder pdflatex``.
 4. Open the ``_build/latex/book.pdf`` file in your PDF viewer.
+
+
+Cite this book
+-------------------------
+
+
+If you found this book useful for your blog post, research article or product, we would be grateful if you would cite it like this:
+
+.. code-block:: none
+
+    Barbiero P., Ciravegna G., Debot D., Diligenti M.,
+    Dominici G., Espinosa Zarlenga M., Giannini F., Marra G. (2024).
+    Concept-based Interpretable Deep Learning in Python.
+    https://pyc-team.github.io/pyc-book/intro.html
+
+
+Or use the following bibtex entry:
+
+.. code-block:: none
+
+    @book{pycteam2024concept,
+      title      = {Concept-based Interpretable Deep Learning in Python},
+      author     = {Pietro Barbiero, Gabriele Ciravegna, David Debot, Michelangelo Diligenti, Gabriele Dominici, Mateo Espinosa Zarlenga, Francesco Giannini, Giuseppe Marra},
+      year       = {2024},
+      url        = {https://pyc-team.github.io/pyc-book/intro.html}
+    }
