@@ -4,6 +4,7 @@
 title: Concept-based Interpretable Deep Learning in Python
 author: The PyC Team
 logo: ./images/pyc_logo_text.png
+copyright: "2024"
 
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
@@ -12,6 +13,8 @@ execute:
 
 # Define the name of the latex output file for PDF builds
 latex:
+  latex_engine: pdflatex
+  use_jupyterbook_latex: true
   latex_documents:
     targetname: book.tex
 
@@ -28,5 +31,6 @@ repository:
 # Add GitHub buttons to your book
 # See https://jupyterbook.org/customize/config.html#add-a-link-to-your-repository
 html:
+  favicon: ./images/favicons/favicon.ico
   use_issues_button: true
   use_repository_button: true
