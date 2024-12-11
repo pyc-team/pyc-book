@@ -12,6 +12,21 @@ execute:
   execute_notebooks: force
   timeout: 600
 
+parse:
+  myst_enable_extensions:
+    # don't forget to list any other extensions you want enabled,
+    # including those that are enabled by default!
+    - amsmath
+    - dollarmath
+    - html_admonition
+    - html_image
+    - linkify
+    - smartquotes
+    - strikethrough
+    - substitution
+    - tasklist
+
+
 # Define the name of the latex output file for PDF builds
 latex:
   latex_engine: pdflatex
