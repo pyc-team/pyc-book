@@ -10,6 +10,7 @@ parts:
       - file: part01_intro/chapter01_teaser
       - file: part01_intro/chapter02_cbm
       - file: part01_intro/chapter03_metrics
+      - file: part01_intro/chapter05_label_free_cbm
   - caption:
     numbered: false
     chapters:
