@@ -1,0 +1,746 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>4. Label-free Concept Bottleneck Models &#8212; Concept-based Interpretable Deep Learning in Python</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'part01_intro/chapter05_label_free_cbm';</script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Bibliography" href="../bibliography.html" />
+    <link rel="prev" title="3. Quantitative metrics in concept interpretability" href="chapter03_metrics.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/pyc_logo_text.png" class="logo__image only-light" alt="Concept-based Interpretable Deep Learning in Python - Home"/>
+    <script>document.write(`<img src="../_static/pyc_logo_text.png" class="logo__image only-dark" alt="Concept-based Interpretable Deep Learning in Python - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Concept-based Interpretable Deep Learning in Python
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction to Concept-based Interpretability</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapter01_teaser.html">1. The tale of the deep learning model that failed my driving exam</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter02_cbm.html">2. Concept Bottleneck Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter03_metrics.html">3. Quantitative metrics in concept interpretability</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">4. Label-free Concept Bottleneck Models</a></li>
+
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">PyC Team</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/pyc-team/pyc-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/pyc-team/pyc-book/issues/new?title=Issue%20on%20page%20%2Fpart01_intro/chapter05_label_free_cbm.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/part01_intro/chapter05_label_free_cbm.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Label-free Concept Bottleneck Models</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">4. Label-free Concept Bottleneck Models</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-burden-of-concept-annotations">4.1. The Burden of Concept Annotations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-blueprint-for-label-free-cbms">4.2. A Blueprint for Label-free CBMs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-foundation-models-as-knowledge-sources-stage-1">4.3. Using Foundation Models as Knowledge Sources (Stage 1)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hands-on-identifying-meaningful-concepts-using-llms">4.3.1. [Hands-on] Identifying Meaningful Concepts Using LLMs</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simulating-human-annotators-via-multimodal-models-stage-2">4.4. Simulating Human Annotators Via Multimodal Models (Stage 2)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hands-on-constructing-scalar-labels-for-discovered-concepts">4.4.1. [Hands-on] Constructing Scalar Labels for Discovered Concepts</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#concept-alignment-stage-3">4.5. Concept Alignment (Stage 3)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hands-on-building-a-label-free-cbm">4.5.1. [Hands-on] Building a Label-free CBM</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coda-limitations-of-existing-label-free-approaches">4.6. Coda: Limitations of Existing Label-free Approaches</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#take-home-messages">5. Take Home Messages</a></li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="label-free-concept-bottleneck-models">
+<h1><span class="section-number">4. </span>Label-free Concept Bottleneck Models<a class="headerlink" href="#label-free-concept-bottleneck-models" title="Permalink to this heading">#</a></h1>
+<div style="text-align: center;">
+    Or "<i>how to train your CBM when you do not have concept labels?</i>"
+</div>
+<figure class="align-center" id="directive-fig">
+<a class="reference internal image-reference" href="../_images/label_free_header.png"><img alt="../_images/label_free_header.png" src="../_images/label_free_header.png" style="width: 100%;" /></a>
+</figure>
+<section id="the-burden-of-concept-annotations">
+<h2><span class="section-number">4.1. </span>The Burden of Concept Annotations<a class="headerlink" href="#the-burden-of-concept-annotations" title="Permalink to this heading">#</a></h2>
+<p>When describing <a class="reference external" href="https://arxiv.org/abs/2007.04612">Concept Bottleneck Models</a> (CBMs) <span id="id1">[<a class="reference internal" href="../bibliography.html#id2" title="Pang Wei Koh, Thao Nguyen, Yew Siang Tang, Stephen Mussmann, Emma Pierson, Been Kim, and Percy Liang. Concept bottleneck models. In International conference on machine learning, 5338–5348. PMLR, 2020.">KNT+20</a>]</span>, we <span class="xref myst">argued</span> that by aligning every neuron in a “<em>bottleneck</em>” layer to some known ground truth concept, CBMs provide a useful framework for constructing interpretable neural models.
+However, it is only fair to admit that we might’ve grossly overlooked a key requirement: to properly train a CBM, one requires a large training set <span class="math notranslate nohighlight">\(\mathcal{D} = \{(\mathbf{x}^{(i)}, \mathbf{c}^{(i)}, y^{(i)})\}_{i = 1}^N\)</span> such that every training sample <span class="math notranslate nohighlight">\(\mathbf{x}^{(i)}\)</span> is not just annotated with a downstream label <span class="math notranslate nohighlight">\(y^{(i)}\)</span> but it also has a set of <span class="math notranslate nohighlight">\(k\)</span> binary concept annotations <span class="math notranslate nohighlight">\(\mathbf{c}^{(i)} \subseteq \{0, 1\}^k\)</span>.</p>
+<p>Anyone reading the previous statement would be more than forgiven to question its implications and, more importantly, its practical validity. As you can imagine, obtaining <span class="math notranslate nohighlight">\(k\)</span> binary concept annotations for each task relies, at the very least, on the following key assumptions:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\textcolor{blue}{\textbf{Assumption #1 (Oracle-like Awareness)}}\)</span>: during data collection/curation, data collectors must know <em>all</em> relevant concepts for a downstream task <span class="math notranslate nohighlight">\(y\)</span> of interest. For example, if I am learning to predict whether a car should stop at an intersection, then I should know the concepts of “light color”, “ambulance coming”, and “car in intersection” are sufficient to fully describe this task. In other words, we have oracle-like knowledge of all relevant high-level units of information required for a specific downstream task.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\textcolor{blue}{\textbf{Assumption #2 (Tractable Data Collection)}}\)</span>: we have the ability (e.g., time, money, and reach) to efficiently collect concept labels for all samples in the training set. We should be able to achieve this even if the set of concept labels is large (e.g., in the order of thousands of concepts).</p></li>
+<li><p><span class="math notranslate nohighlight">\(\textcolor{blue}{\textbf{Assumption #3 (Storage/Collection Freedom)}}\)</span>: there are no conditions (e.g., legal, privacy, sensitivity, etc. constraints) that would limit our ability to store and collect all concept labels for all samples. This should hold even if some of the concept labels may contain sensitive or identifiable information in them about a specific sample (e.g., medical or demographic records).</p></li>
+</ul>
+<p>Seriously considering these assumptions, quickly leads one to the realization that CBMs are highly constrained to be used in scenarios where (#1) we precisely know what concepts define our task of interest (e.g., this is mostly true for human-generated/synthetic task labels such as medical score systems), (#2) we have the ability to collect all of the concept labels (i.e., meaning <span class="math notranslate nohighlight">\(k\)</span> should be small and concepts should not be too expensive to collect), and (#3) we should only use these models in tasks where concept labels do not directly or indirectly contain identifiable/private/sensitive information we may not want to store in the first place (e.g., demographic variables or proxies).</p>
+<p>All of these impose severe barriers to the applicability and usefulness of CBMs in real-world tasks. With this in mind, in this chapter we will introduce a set of techniques that can enable one to train a CBM even when we have no access to ground truth concept annotations. For this, we will leverage the vast wealth of knowledge and data that has been distilled into today’s so-called <a class="reference external" href="https://arxiv.org/abs/2108.07258">Foundation Models</a> <span id="id2">[<a class="reference internal" href="../bibliography.html#id7" title="Rishi Bommasani, Drew A Hudson, Ehsan Adeli, Russ Altman, Simran Arora, Sydney von Arx, Michael S Bernstein, Jeannette Bohg, Antoine Bosselut, Emma Brunskill, and others. On the opportunities and risks of foundation models. arXiv preprint arXiv:2108.07258, 2021.">BHA+21</a>]</span>.</p>
+</section>
+<section id="a-blueprint-for-label-free-cbms">
+<h2><span class="section-number">4.2. </span>A Blueprint for Label-free CBMs<a class="headerlink" href="#a-blueprint-for-label-free-cbms" title="Permalink to this heading">#</a></h2>
+<p>In this Chapter, we will explore how to construct CBMs that are “label-free”<sup>1</sup>,
+avoiding the need for us to determine and collect all relevant concept labels
+for a downstream task of interest. Specifically, we will explore the underlying
+ideas behind two very popular concept-based models that do not require concept
+labels at training-time (so-called <em>label-free</em> approaches): <a class="reference external" href="https://arxiv.org/abs/2304.06129">Label-Free Concept Bottleneck Model</a> <span id="id3">[<a class="reference internal" href="../bibliography.html#id8" title="Tuomas P Oikarinen, Subhro Das, Lam M Nguyen, and Tsui-Wei Weng. Label-free concept bottleneck models. In ICLR. 2023.">ODNW23</a>]</span> and <a class="reference external" href="https://arxiv.org/abs/2211.11158">Language in a Bottle</a> <span id="id4">[<a class="reference internal" href="../bibliography.html#id9" title="Yue Yang, Artemis Panagopoulou, Shenghao Zhou, Daniel Jin, Chris Callison-Burch, and Mark Yatskar. Language in a bottle: language model guided concept bottlenecks for interpretable image classification. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, 19187–19197. 2023.">YPZ+23</a>]</span>.
+Both of these works capitalize on the power and availability of Foundation
+Models, and exploit these models to simulate human concept annotators. The crux
+for achieving this is to split the training process of a CBM into three stages
+where each stage tackles a different question:</p>
+<ol class="arabic simple">
+<li><p><strong>Concept Refinement</strong>: given a label-annotated training set <span class="math notranslate nohighlight">\(\mathcal{D} = \{(\mathbf{x}^{(i)}, y^{(i)})\}_{i = 1}^N\)</span> (as in the standard supervised learning setup), how can we discover the identity (or semantics) of all concepts relevant to predict <span class="math notranslate nohighlight">\(y\)</span> given <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>?</p></li>
+<li><p><strong>Automatic Concept Annotation</strong>: once we know the semantics of all the concepts of interest for the downstream task, how can we generate <em>concept labels</em> for all samples in our training set?</p></li>
+<li><p><strong>Concept Alignment</strong>: once we have concept annotations, how can we fine-tune or train a model that uses the refined concept set to explain its downstream task prediction?</p></li>
+</ol>
+<figure class="align-center" id="id5">
+<a class="reference internal image-reference" href="images/label_free_cbms/label_free_cbm_blueprint.png"><img alt="images/label_free_cbms/label_free_cbm_blueprint.png" src="images/label_free_cbms/label_free_cbm_blueprint.png" style="width: 100%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 4.1 </span><span class="caption-text">TODO: Abstract visualization of a blueprint for constructing label-free CBMs.</span><a class="headerlink" href="#id5" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Below, we elaborate on how each of these stages can be implemented
+in practice. As we do this, we will make use of our <a class="reference external" href="https://github.com/pyc-team/pytorch_concepts">PyC</a>
+library as we describe how we can construct a label-free CBM in PyTorch. If you
+are not familiar with this library yet, please take a look at our
+<span class="xref myst">CBM chapter</span> before jumping into this chapter.</p>
+</section>
+<section id="using-foundation-models-as-knowledge-sources-stage-1">
+<h2><span class="section-number">4.3. </span>Using Foundation Models as Knowledge Sources (Stage 1)<a class="headerlink" href="#using-foundation-models-as-knowledge-sources-stage-1" title="Permalink to this heading">#</a></h2>
+<blockquote>
+<div><p>⚠️ <strong>Warning</strong>: This section and the following ones assume that you have successfully installed and worked with our PyC library. For a tutorial on how to use this, please refer to our <a class="reference external" href="https://pyc-team.github.io/pyc-book/part01_intro/chapter02_cbm.html">CBM post</a> or to the library’s <a class="reference external" href="https://github.com/pyc-team/pytorch_concepts">official documentation</a>.</p>
+</div></blockquote>
+<p>The first stage of any label-free pipeline is called <em>Concept Refinement</em>.
+Here, we aim to identify the semantics of a handful of high-level concepts
+that are useful for predicting a downstream task of interest. The key idea
+behind label-free approaches, as is the case nowadays whenever someone is in
+doubt, is to <strong>delegate this process to a Foundation Model</strong>.</p>
+<p>Foundation models like <a class="reference external" href="https://openai.com/index/gpt-4/">GPT-4</a> <span id="id6">[<a class="reference internal" href="../bibliography.html#id10" title="Josh Achiam, Steven Adler, Sandhini Agarwal, Lama Ahmad, Ilge Akkaya, Florencia Leoni Aleman, Diogo Almeida, Janko Altenschmidt, Sam Altman, Shyamal Anadkat, and others. Gpt-4 technical report. arXiv preprint arXiv:2303.08774, 2023.">AAA+23</a>]</span> are trained on vast
+amounts of unstructured text, audio, and images. This enables them to learn rich
+semantic relationships between visual features and textual descriptions. As a
+result, they can function as approximate human evaluators, providing concept
+labels for new input requiring manual annotation. This idea can be applied to
+any input data, as far as there is one foundation model that can reason about
+instances in the domain of interest.</p>
+<p>Therefore, approaches like Label-free CBMs avoid the need for specifying concepts
+in advance and collecting labeled datasets, by <strong>querying a foundation model</strong>
+to obtain text descriptions of potential concepts that are important for a
+downstream task. For example, you can obtain textual descriptions of
+concepts that are relevant for the task “stop at an intersection” by asking an LLM
+to “<em>List the most important features for recognizing something as a {class}:</em>”.
+In our driving intersection example, this may look as follows:</p>
+<figure class="align-center" id="id7">
+<a class="reference internal image-reference" href="../_images/gpt_road_example.png"><img alt="../_images/gpt_road_example.png" src="../_images/gpt_road_example.png" style="width: 100%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 4.2 </span><span class="caption-text">Example of identifying useful concepts to determine whether one should stop at
+a car intersection using GPT-4o as our source of knowledge.</span><a class="headerlink" href="#id7" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>In practice, Oikarinen et al. and Yang et al. apply several filters to the output
+of the LLM to reduce the size, redundancy, and complexity of the output concepts
+set. Nevertheless, after running this process for all the output classes in our
+downstream task <span class="math notranslate nohighlight">\(y\)</span>, we obtain a set <span class="math notranslate nohighlight">\(\hat{\mathcal{C}}\)</span> of textual descriptions
+of high-level concepts!
+Then, all we need to do is understand how to leverage these textual descriptions
+to obtain concept labels we can use to train a CBM. That will be done in our
+second stage of the label-free blueprint described above.</p>
+<section id="hands-on-identifying-meaningful-concepts-using-llms">
+<h3><span class="section-number">4.3.1. </span>[Hands-on] Identifying Meaningful Concepts Using LLMs<a class="headerlink" href="#hands-on-identifying-meaningful-concepts-using-llms" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>TODO:  Need to decide the following:
+1. Which dataset should we use for this chapter? My suggestion would be a smaller subset of
+   AwA2, maybe choosing only two animal species to discriminate.
+2. How can we generate this without requiring an API key for the LLM? Should
+   we run these separately and report the results here? Or should we do it
+   programatically within the notebook?
+3. How to incorporate the concept refinement stage of Label-free methods into PyC?
+   My preference would be to keep the label/data side of things outside of the library,
+   although we can show it as an example.
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span>  <span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+    <span class="n">TODO</span><span class="p">:</span>  <span class="n">Need</span> <span class="n">to</span> <span class="n">decide</span> <span class="n">the</span> <span class="n">following</span><span class="p">:</span>
+                <span class="o">^</span>
+<span class="ne">SyntaxError</span>: invalid syntax
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="simulating-human-annotators-via-multimodal-models-stage-2">
+<h2><span class="section-number">4.4. </span>Simulating Human Annotators Via Multimodal Models (Stage 2)<a class="headerlink" href="#simulating-human-annotators-via-multimodal-models-stage-2" title="Permalink to this heading">#</a></h2>
+<p><strong>TODO:</strong> This section needs completing and a lot of massaging too.</p>
+<p>Once we have a set of textual concept descriptions <span class="math notranslate nohighlight">\(\hat{\mathcal{C}}\)</span>, we use
+them to annotate a training set with concept labels. We will do this by exploiting
+Multimodal Models (e.g., models trained with more than one modality, or datatype).
+For example, if our input samples <span class="math notranslate nohighlight">\(\mathbf{x}^{(i)}\)</span> are natural images, then
+we can use something like <a class="reference external" href="https://openai.com/research/clip">CLIP (Contrastive Language-Image Pretraining)</a>, a vision-language model trained to associate images with textual descriptions through contrastive learning, to generate scalar scores corresponding to each <span class="math notranslate nohighlight">\((\mathbf{x}^{(i)}, C), where \)</span>c \in <span class="math notranslate nohighlight">\(\hat{\mathcal{C}}\)</span>$ is any of the concepts descriptions we
+extracted in Stage 1 of our blueprint.</p>
+<p>To have a nice intro to what CLIP is and how you can use it, you can visit <span class="xref myst">this tutorial</span>.</p>
+<p><strong>TODO:</strong> Describe how to construct a similarity matrix, as this is useful for part 3.</p>
+<section id="hands-on-constructing-scalar-labels-for-discovered-concepts">
+<h3><span class="section-number">4.4.1. </span>[Hands-on] Constructing Scalar Labels for Discovered Concepts<a class="headerlink" href="#hands-on-constructing-scalar-labels-for-discovered-concepts" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">TODO</span><span class="p">:</span>
+<span class="mf">1.</span> <span class="n">Use</span> <span class="n">CLIP</span> <span class="n">to</span> <span class="n">generate</span> <span class="n">scores</span> <span class="k">for</span> <span class="n">each</span> <span class="n">concept</span> <span class="k">for</span> <span class="n">each</span> <span class="n">sample</span><span class="o">.</span>
+<span class="mf">2.</span> <span class="n">Show</span> <span class="n">that</span> <span class="n">these</span> <span class="n">scores</span> <span class="n">could</span> <span class="n">be</span> <span class="n">left</span> <span class="k">as</span> <span class="n">unbounded</span> <span class="n">scalars</span> <span class="k">as</span> <span class="n">well</span> <span class="k">as</span> <span class="n">they</span>
+   <span class="n">could</span> <span class="n">be</span> <span class="n">binarized</span> <span class="n">using</span> <span class="n">a</span> <span class="n">zero</span><span class="o">-</span><span class="n">shot</span> <span class="n">classifier</span><span class="o">.</span>
+<span class="mf">3.</span> <span class="n">Make</span> <span class="n">it</span> <span class="n">clear</span> <span class="n">that</span> <span class="ow">in</span> <span class="n">order</span> <span class="n">to</span> <span class="n">follow</span> <span class="n">the</span> <span class="n">original</span> <span class="n">label</span><span class="o">-</span><span class="n">free</span> <span class="n">paper</span><span class="p">,</span> <span class="n">here</span> <span class="n">we</span>
+   <span class="n">will</span> <span class="n">focus</span> <span class="n">on</span> <span class="n">the</span> <span class="n">unbounded</span> <span class="n">scalar</span> <span class="n">scores</span> <span class="n">form</span><span class="o">.</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="concept-alignment-stage-3">
+<h2><span class="section-number">4.5. </span>Concept Alignment (Stage 3)<a class="headerlink" href="#concept-alignment-stage-3" title="Permalink to this heading">#</a></h2>
+<p>TODO: discuss how to use the concept similarity matrix to construct a CBM.
+Here we should probably introduce the label-free CBM “cos cubed” loss as well as
+the use of sparse label predictors to construct interpretable models.</p>
+<section id="hands-on-building-a-label-free-cbm">
+<h3><span class="section-number">4.5.1. </span>[Hands-on] Building a Label-free CBM<a class="headerlink" href="#hands-on-building-a-label-free-cbm" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">TODO</span><span class="p">:</span>
+<span class="mf">1.</span> <span class="n">Decide</span> <span class="n">how</span> <span class="n">to</span> <span class="n">construct</span> <span class="n">the</span> <span class="n">API</span> <span class="k">for</span> <span class="n">the</span> <span class="n">label</span><span class="o">-</span><span class="n">free</span> <span class="n">CBM</span> <span class="n">model</span><span class="o">.</span> <span class="n">I</span> <span class="n">would</span> <span class="n">suggest</span>
+   <span class="n">adding</span> <span class="n">a</span> <span class="n">LabelFreeConceptBottleneckLayer</span> <span class="k">as</span> <span class="n">a</span> <span class="n">new</span> <span class="n">layer</span> <span class="k">as</span> <span class="n">well</span> <span class="k">as</span> <span class="n">the</span>
+   <span class="n">label</span><span class="o">-</span><span class="n">free</span> <span class="n">loss</span> <span class="k">as</span> <span class="n">a</span> <span class="n">new</span> <span class="n">loss</span> <span class="n">function</span><span class="o">/</span><span class="k">class</span> <span class="nc">in</span> <span class="n">PyC</span><span class="o">.</span>
+<span class="mf">2.</span> <span class="n">Add</span> <span class="n">a</span> <span class="n">sparse</span> <span class="n">layer</span> <span class="k">class</span> <span class="nc">too</span> <span class="k">for</span> <span class="n">the</span> <span class="n">label</span> <span class="n">predictor</span><span class="p">,</span> <span class="n">something</span> <span class="n">that</span> <span class="n">will</span>
+   <span class="n">be</span> <span class="n">useful</span> <span class="ow">not</span> <span class="n">just</span> <span class="k">for</span> <span class="n">this</span> <span class="n">chapter</span> <span class="n">but</span> <span class="n">also</span> <span class="k">for</span> <span class="n">others</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="p">,</span> <span class="n">post</span><span class="o">-</span><span class="n">hoc</span> <span class="n">CBM</span><span class="p">)</span><span class="o">.</span>
+<span class="mf">3.</span> <span class="n">Use</span> <span class="n">the</span> <span class="n">labels</span> <span class="n">constructed</span> <span class="n">above</span> <span class="n">to</span> <span class="n">train</span> <span class="n">a</span> <span class="n">label</span><span class="o">-</span><span class="n">free</span> <span class="n">CBM</span><span class="o">.</span>
+<span class="mf">4.</span> <span class="n">Visualize</span> <span class="n">some</span> <span class="n">of</span> <span class="n">the</span> <span class="n">explanations</span> <span class="n">it</span> <span class="n">generates</span> <span class="k">for</span> <span class="n">some</span> <span class="k">for</span> <span class="n">some</span> <span class="n">examples</span>
+<span class="mf">5.</span> <span class="n">Do</span> <span class="n">some</span> <span class="n">flow</span> <span class="n">diagrams</span> <span class="k">as</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">paper</span> <span class="n">to</span> <span class="n">visualize</span> <span class="n">the</span> <span class="n">label</span> <span class="n">predictor</span><span class="s1">&#39;s</span>
+   <span class="n">weights</span> <span class="k">for</span> <span class="n">different</span> <span class="n">classes</span><span class="o">.</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="coda-limitations-of-existing-label-free-approaches">
+<h2><span class="section-number">4.6. </span>Coda: Limitations of Existing Label-free Approaches<a class="headerlink" href="#coda-limitations-of-existing-label-free-approaches" title="Permalink to this heading">#</a></h2>
+<p>[TODO: complete/clean-up this section]</p>
+<p>While using CLIP or other foundation models for concept extraction offers numerous advantages, it also comes with several limitations:</p>
+<ul class="simple">
+<li><p><strong>Domain-Specificity</strong>: These models are trained on diverse datasets but may struggle with domain-specific concepts that are underrepresented in their training data. This could be aided by exploiting domain-specific foundation models (e.g., <a class="reference external" href="https://arxiv.org/abs/2210.10163">MedCLIP</a> <span id="id8">[<a class="reference internal" href="../bibliography.html#id11" title="Zifeng Wang, Zhenbang Wu, Dinesh Agarwal, and Jimeng Sun. Medclip: contrastive learning from unpaired medical images and text. In Proceedings of the Conference on Empirical Methods in Natural Language Processing. Conference on Empirical Methods in Natural Language Processing, volume 2022, 3876. 2022.">WWAS22</a>]</span> for diagnosis/prognosis tasks).</p></li>
+<li><p><strong>Performance Dependence</strong>: The quality of concept extraction is inherently tied to the performance of the foundation models. If these models have limitations or biases, the extracted concepts will reflect them.</p></li>
+<li><p><strong>Lack of Guarantees Outputs</strong>: Unlike human annotators who follow specific guidelines, foundation models generate concept scores based on broad statistical associations, which may lack consistency or reliability in specific applications. This could lead to significantly noisy concept labels.</p></li>
+</ul>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="take-home-messages">
+<h1><span class="section-number">5. </span>Take Home Messages<a class="headerlink" href="#take-home-messages" title="Permalink to this heading">#</a></h1>
+<p>[TODO: complete/clean-up this section]</p>
+<p>Automatically extracting concepts using foundation models offers a powerful alternative to manually annotated datasets for concept-based deep learning. By leveraging the vast knowledge embedded in these models, we can obtain high-level, human-interpretable concepts with minimal effort. However, challenges remain, particularly regarding domain adaptation, reliance on potentially sub-optimal models, and the interpretability of extracted concepts.</p>
+<p>While foundation models can serve as effective proxies for human experts, their outputs should be used cautiously. These models should not be treated as absolute sources of truth but rather as tools that aid in concept extraction, requiring human validation to ensure accuracy and robustness.</p>
+<p><strong>Bibliography</strong></p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://arxiv.org/abs/2304.06129">Oikarinen, Tuomas P., et al. “Label-free Concept Bottleneck Models.” ICLR. 2023.</a></p></li>
+<li><p><a class="reference external" href="https://arxiv.org/abs/2211.11158">Yang, Yue, et al. “Language in a bottle: Language model guided concept bottlenecks for interpretable image classification.” Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2023.</a></p></li>
+<li><p><a class="reference external" href="https://arxiv.org/abs/2108.07258">Bommasani, Rishi, et al. “On the opportunities and risks of foundation models.” arXiv preprint arXiv:2108.07258 (2021).</a></p></li>
+<li><p><a class="reference external" href="https://arxiv.org/abs/2303.08774">Achiam, Josh, et al. “Gpt-4 technical report.” arXiv preprint arXiv:2303.08774 (2023)</a></p></li>
+<li><p><a class="reference external" href="https://arxiv.org/abs/2210.10163">Wang, Zifeng, et al. “Medclip: Contrastive learning from unpaired medical images and text.” Proceedings of the Conference on Empirical Methods in Natural Language Processing. Conference on Empirical Methods in Natural Language Processing. Vol. 2022. 2022.</a></p></li>
+</ul>
+<hr class="docutils" />
+<p><strong>Footnotes</strong></p>
+<p>1: Label-free here implies uniquely “free of concept labels.” Nevertheless, it is important to understand that we still have access to downstream labels <span class="math notranslate nohighlight">\(y\)</span>.</p>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./part01_intro"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="chapter03_metrics.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">3. </span>Quantitative metrics in concept interpretability</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../bibliography.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Bibliography</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">4. Label-free Concept Bottleneck Models</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-burden-of-concept-annotations">4.1. The Burden of Concept Annotations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-blueprint-for-label-free-cbms">4.2. A Blueprint for Label-free CBMs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-foundation-models-as-knowledge-sources-stage-1">4.3. Using Foundation Models as Knowledge Sources (Stage 1)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hands-on-identifying-meaningful-concepts-using-llms">4.3.1. [Hands-on] Identifying Meaningful Concepts Using LLMs</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simulating-human-annotators-via-multimodal-models-stage-2">4.4. Simulating Human Annotators Via Multimodal Models (Stage 2)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hands-on-constructing-scalar-labels-for-discovered-concepts">4.4.1. [Hands-on] Constructing Scalar Labels for Discovered Concepts</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#concept-alignment-stage-3">4.5. Concept Alignment (Stage 3)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hands-on-building-a-label-free-cbm">4.5.1. [Hands-on] Building a Label-free CBM</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coda-limitations-of-existing-label-free-approaches">4.6. Coda: Limitations of Existing Label-free Approaches</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#take-home-messages">5. Take Home Messages</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The PyC Team
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

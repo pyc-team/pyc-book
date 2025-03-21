@@ -1,0 +1,1048 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>3. Quantitative metrics in concept interpretability &#8212; Concept-based Interpretable Deep Learning in Python</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'part01_intro/chapter03_metrics';</script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="4. Label-free Concept Bottleneck Models" href="chapter05_label_free_cbm.html" />
+    <link rel="prev" title="2. Concept Bottleneck Models" href="chapter02_cbm.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/pyc_logo_text.png" class="logo__image only-light" alt="Concept-based Interpretable Deep Learning in Python - Home"/>
+    <script>document.write(`<img src="../_static/pyc_logo_text.png" class="logo__image only-dark" alt="Concept-based Interpretable Deep Learning in Python - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Concept-based Interpretable Deep Learning in Python
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction to Concept-based Interpretability</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapter01_teaser.html">1. The tale of the deep learning model that failed my driving exam</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter02_cbm.html">2. Concept Bottleneck Models</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">3. Quantitative metrics in concept interpretability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter05_label_free_cbm.html">4. Label-free Concept Bottleneck Models</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">PyC Team</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/pyc-team/pyc-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/pyc-team/pyc-book/issues/new?title=Issue%20on%20page%20%2Fpart01_intro/chapter03_metrics.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/part01_intro/chapter03_metrics.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Quantitative metrics in concept interpretability</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#predictive-performance">3.1. Predictive performance</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#task-performance">3.1.1. Task performance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#concept-performance">3.1.2. Concept performance</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intervention-effectiveness">3.2. Intervention effectiveness</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#concept-completeness">3.3. Concept completeness</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coding-practice-quantitative-metrics-for-concept-based-models">3.4. Coding practice: quantitative metrics for concept-based models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-train-a-cbm">3.4.1. Step #1: Train a CBM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-compute-task-and-concept-performance">3.4.2. Step #2: Compute task and concept performance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-compute-intervention-effectiveness">3.4.3. Step #3: Compute intervention effectiveness</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-compute-concept-completeness">3.4.4. Step #4: Compute concept completeness</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#take-home-message">3.5. Take Home Message</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="quantitative-metrics-in-concept-interpretability">
+<h1><span class="section-number">3. </span>Quantitative metrics in concept interpretability<a class="headerlink" href="#quantitative-metrics-in-concept-interpretability" title="Permalink to this heading">#</a></h1>
+<p>In the “<a class="reference internal" href="chapter01_teaser.html"><span class="doc std std-doc">The tale of the deep learning model that failed my driving exam</span></a>”, we compared the decisions of an 18-year-old driver and a deep learning (DL) model when facing a tricky intersection where the driver had a green light, but an ambulance unexpectedly crossed. While both drivers stopped at the intersection, when the driver evaluator asked the model to explain how it came to such a decision, he realized the model’s responses were purely technical, focused on pixel values and activations rather than a true understanding of traffic rules or emergency vehicles:</p>
+<blockquote>
+<div><p>“If pixel 2,890 had an RGB value of (28, 178, 111), the model would have chosen to cross.” [Example of a DL driver explanation]</p>
+</div></blockquote>
+<p>To help the driving evaluator, in the last chapter, we introduced <strong><a class="reference internal" href="chapter02_cbm.html"><span class="doc std std-doc">Concept Bottleneck Models</span></a> (CBMs)</strong>:</p>
+<figure class="align-center" id="directive-fig">
+<a class="reference internal image-reference" href="../_images/cbm.png"><img alt="../_images/cbm.png" src="../_images/cbm.png" style="width: 50%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 3.1 </span><span class="caption-text">A concept bottleneck model maps raw image features (pixels) to human-understandable concepts (e.g., ambulance crossing) and then relies on these predicted concepts to make decisions (e.g., whether to cross). Image created by the author with assistance from GPT4-o.</span><a class="headerlink" href="#directive-fig" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>CBMs allow the evaluator to gain insights into a DL model’s decision-making process as:</p>
+<ul class="simple">
+<li><p><strong>Task predictions can be traced back to the activation of human-interpretable concepts</strong>. This enables the model to answer the driving evaluator’s question by saying, “I decided to cross as I saw a green light and there was no ambulance”.</p></li>
+<li><p><strong>Altering concept values changes the model’s decisions</strong>. This allows the model to respond to the evaluator’s question with, “In the same scenario, if there is an ambulance, I would cross”.</p></li>
+</ul>
+<p>While these qualitative answers reassured the evaluator, he now needs a <strong>quantitative</strong> way to assess how well the model responds in different situations. To show this, we use three key metrics in concept-based interpretability: concept/task <strong>predictive performance</strong>, <strong>intervention effectiveness</strong>, and <strong>concept completeness</strong>.</p>
+<p>In the following, we assume we have a CBM <span class="math notranslate nohighlight">\((\theta_g, \theta_f)\)</span> and a dataset of i.i.d. triples (input, concepts, task) <span class="math notranslate nohighlight">\(\mathcal{D} = \{(\mathbf{x}, \mathbf{c}, y)\}\)</span>, which we use to compute these metrics.</p>
+<section id="predictive-performance">
+<h2><span class="section-number">3.1. </span>Predictive performance<a class="headerlink" href="#predictive-performance" title="Permalink to this heading">#</a></h2>
+<section id="task-performance">
+<h3><span class="section-number">3.1.1. </span>Task performance<a class="headerlink" href="#task-performance" title="Permalink to this heading">#</a></h3>
+<p>In the driving test, task performance <span id="id1">[<a class="reference internal" href="../bibliography.html#id2" title="Pang Wei Koh, Thao Nguyen, Yew Siang Tang, Stephen Mussmann, Emma Pierson, Been Kim, and Percy Liang. Concept bottleneck models. In International conference on machine learning, 5338–5348. PMLR, 2020.">KNT+20</a>]</span> measures how well the model predicts whether to cross or stop at the intersection, based on concepts like traffic light color and the ambulance. A high task performance indicates that the model generally makes the correct decision. Task performance is usually represented as the likelihood:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}(\theta_f, \theta_g, \mathcal{D}) = \frac{1}{|\mathcal{D}|} \sum_{(\mathbf{x}, \mathbf{c}, y) \in \mathcal{D}} \ p\big (Y=y \mid C=g(\mathbf{x}) \; ; \; \theta_f\big)\]</div>
+<p>Notice that in common classification settings, this likelihood becomes the <strong>empirical test task accuracy of the model</strong>.</p>
+<p><strong>Limitations:</strong> High task performance alone doesn’t guarantee interpretability. The model might achieve high performance by relying on uninterpretable or poorly defined concepts, potentially missing key information. For example, a CBM could correctly predict whether to cross or stop, but its decisions might be unaffected by changing the value of the concept “ambulance”.</p>
+</section>
+<section id="concept-performance">
+<h3><span class="section-number">3.1.2. </span>Concept performance<a class="headerlink" href="#concept-performance" title="Permalink to this heading">#</a></h3>
+<p>Concept performance <span id="id2">[<a class="reference internal" href="../bibliography.html#id2" title="Pang Wei Koh, Thao Nguyen, Yew Siang Tang, Stephen Mussmann, Emma Pierson, Been Kim, and Percy Liang. Concept bottleneck models. In International conference on machine learning, 5338–5348. PMLR, 2020.">KNT+20</a>]</span> measures how well the model correctly predicts the concepts from the input data. In our driving example, this evaluates how well the model detects traffic light color or the ambulance’s presence. Similarly to task performance, concept performance can be measured as the likelihood:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}(\theta_g, \mathcal{D}) = \frac{1}{|\mathcal{D}|} \sum_{(\mathbf{x}, \mathbf{c}, y) \in \mathcal{D}} \ p\big(C=\mathbf{c} \mid X=\mathbf{x} \; ; \; \theta_g \big)\]</div>
+<p>In practice, this likelihood may be replaced with proxy metrics such as mean <a class="reference external" href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic">Area Under the Receiving Operating Characteristic curve (AUC-ROC)</a> across all concepts. This is particularly useful in situations where concepts are highly imbalanced, and therefore a majority classifier may achieve high likelihood without really learning anything.</p>
+<p><strong>Limitations:</strong> While high concept performance means the model can correctly identify the traffic light color and ambulance presence, it doesn’t always imply that the model will make the right final decision. For example, even if the model accurately identifies a green light and no ambulance, it might still incorrectly predict that the car should stop.</p>
+</section>
+</section>
+<section id="intervention-effectiveness">
+<h2><span class="section-number">3.2. </span>Intervention effectiveness<a class="headerlink" href="#intervention-effectiveness" title="Permalink to this heading">#</a></h2>
+<p>In the coding practice of the previous chapter, we observed how changing the predicted value of a concept affects task predictions. This property allows human experts to intervene on mispredicted concept values and correct them to improve the model’s task performance. Intervention effectiveness <span id="id3">[<a class="reference internal" href="../bibliography.html#id2" title="Pang Wei Koh, Thao Nguyen, Yew Siang Tang, Stephen Mussmann, Emma Pierson, Been Kim, and Percy Liang. Concept bottleneck models. In International conference on machine learning, 5338–5348. PMLR, 2020.">KNT+20</a>]</span> measures how well a CBM improves task performance after such corrections. This can be achieved by computing the <strong>area under the intervention curve</strong> as follows:</p>
+<ul class="simple">
+<li><p>consider a subset of the powerset of the concept indices <span class="math notranslate nohighlight">\(\mathcal{I} \subseteq \mathcal{P}(\{1, \dots, |\mathcal{C}|\})\)</span> to intervene on;</p></li>
+<li><p>for each concept group <span class="math notranslate nohighlight">\(\mathcal{I}' \in \mathcal{I}\)</span>, replace the subset of predictions <span class="math notranslate nohighlight">\(g(\mathbf{x})_{\mathcal{I}'}\)</span> with ground truth values <span class="math notranslate nohighlight">\(\mathbf{c}_{\mathcal{I}'}\)</span>;</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\mathcal{Q}(\theta_f, \theta_g, \mathcal{D}, \mathcal{I}) = \frac{1}{|\mathcal{D}| |\mathcal{I}|} \sum_{\mathcal{I}' \in \mathcal{I}} \sum_{(\mathbf{x}, \mathbf{c}, y) \in \mathcal{D}}  \ p\big(Y=y \mid C=g(\mathbf{x}) \text{ s.t. } g(\mathbf{x})_{\mathcal{I}'} := \mathbf{c}_{\mathcal{I}'} \; ; \; \theta_f)\]</div>
+<p>In the driving test scenario, imagine the model incorrectly predicts that the ambulance is absent, leading to a wrong decision to cross. This metric would evaluate whether correcting the concept by setting “ambulance = 1” leads the model to change its prediction to the correct one (i.e., stopping). After this human intervention, we expect the model to revise its decision and recommend stopping the car.</p>
+<p>Intervention effectiveness is particularly useful when human experts need to intervene and adjust concept values to improve the model’s decisions, ensuring the model responds accurately after corrections.</p>
+<p><strong>Limitations:</strong> This metric is highly dependent on the quality of the interventions provided by humans. Poorly chosen interventions can reduce the model’s performance, even if the concepts themselves are correct. Moreover, if the concept predictive accuracy is already very high, then this metric may not give you any new insights as interventions would have very little effect on the actual bottleneck.</p>
+</section>
+<section id="concept-completeness">
+<h2><span class="section-number">3.3. </span>Concept completeness<a class="headerlink" href="#concept-completeness" title="Permalink to this heading">#</a></h2>
+<p>In the driving test example, the driving evaluator may wonder whether a CBM underperforms compared to a standard black-box model that does not use concepts. This question can be answered using concept completeness <span id="id4">[<a class="reference internal" href="../bibliography.html#id3" title="Chih-Kuan Yeh, Been Kim, Sercan Arik, Chun-Liang Li, Tomas Pfister, and Pradeep Ravikumar. On completeness-aware concept-based explanations in deep neural networks. Advances in neural information processing systems, 33:20554–20565, 2020.">YKA+20</a>]</span>, a metric that helps determining if the concepts alone provide sufficient information for the model to solve the task when compared to a black box.</p>
+<p>Concept completeness<sup>1</sup> is defined as the ratio of the task performance of a CBM to that of a black-box model <span class="math notranslate nohighlight">\((\theta_b)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{B}(\theta_f, \theta_g, \theta_b, \mathcal{D}) = \frac{\sum_{(\mathbf{x}, \mathbf{c}, y) \in \mathcal{D}} \ p\big( Y = y \mid C=g(\mathbf{x})\; ; \; \theta_f\big)}{\sum_{(\mathbf{x}, \mathbf{c}, y) \in \mathcal{D}} \ p\big(Y = y \mid X=\mathbf{x}, C=\mathbf{c}\; ; \; \theta_b\big)}\]</div>
+<p>In the driving test scenario, if the CBM uses concepts like “traffic light color” and “ambulance presence” and achieves a task accuracy that is close to or greater than a black-box model trained directly on raw input (e.g., image pixels), it implies that the concepts provide the necessary information to complete the task. For instance, if the CBM’s accuracy in predicting whether to stop or cross is 95% and the black-box model’s accuracy is 96%, the high concept completeness score shows that interpretability is achieved with minimal loss in task accuracy.</p>
+<p><strong>Limitations:</strong> High concept completeness does not guarantee that the concepts themselves are fully interpretable or well-defined; a model might achieve high completeness while relying on concepts that are difficult for humans to understand.</p>
+</section>
+<section id="coding-practice-quantitative-metrics-for-concept-based-models">
+<h2><span class="section-number">3.4. </span>Coding practice: quantitative metrics for concept-based models<a class="headerlink" href="#coding-practice-quantitative-metrics-for-concept-based-models" title="Permalink to this heading">#</a></h2>
+<p>In this practice, we will evaluate a CBM’s predictive performance, intervention effectiveness, and concept completeness in a simple traffic light scenario where decisions to cross or stop depend on two concepts: the traffic light being green and the presence of an ambulance. The model predicts these concepts and uses them to make decisions.</p>
+<blockquote>
+<div><p>⚠️ <strong>Note:</strong> This section assumes familiarity with the first chapter on CBMs and PyC (PyC must be installed before running this code). If you’re new to these concepts, it’s recommended to start with <a class="reference internal" href="chapter02_cbm.html"><span class="doc std std-doc">this introductory chapter</span></a> for foundational understanding.</p>
+</div></blockquote>
+<section id="step-1-train-a-cbm">
+<h3><span class="section-number">3.4.1. </span>Step #1: Train a CBM<a class="headerlink" href="#step-1-train-a-cbm" title="Permalink to this heading">#</a></h3>
+<p>We begin this practice by re-training the Concept Bottleneck Model (CBM) used in the previous coding exercise.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="kn">from</span> <span class="nn">torch_concepts.nn</span> <span class="kn">import</span> <span class="n">LinearConceptLayer</span>
+<span class="kn">from</span> <span class="nn">torch_concepts.data</span> <span class="kn">import</span> <span class="n">TrafficLights</span>
+
+<span class="c1"># Fix seeds first</span>
+<span class="n">seed</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+
+<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">500</span>
+
+<span class="c1"># Loading training dataset</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">TrafficLights</span><span class="p">(</span>
+    <span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span>
+    <span class="n">possible_starting_directions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;west&#39;</span><span class="p">],</span>
+    <span class="n">resize_final_image</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+    <span class="n">selected_concepts</span><span class="o">=</span><span class="p">[</span>
+        <span class="s1">&#39;green light on selected lane&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;car in intersection&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ambulance seen&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ambulance approaching perpendicular to selected car&#39;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">split</span><span class="o">=</span><span class="s1">&#39;train&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">concept_names</span><span class="p">,</span> <span class="n">task_names</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">concept_names</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">task_names</span>
+<span class="n">n_concepts</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">concept_names</span><span class="p">)</span>
+
+<span class="c1"># Loading testing dataset</span>
+<span class="c1"># Generate the test dataset</span>
+<span class="n">test_dataset</span> <span class="o">=</span> <span class="n">TrafficLights</span><span class="p">(</span>
+    <span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span>
+    <span class="n">possible_starting_directions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;west&#39;</span><span class="p">],</span>
+    <span class="n">resize_final_image</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+    <span class="n">selected_concepts</span><span class="o">=</span><span class="p">[</span>
+        <span class="s1">&#39;green light on selected lane&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;car in intersection&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ambulance seen&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ambulance approaching perpendicular to selected car&#39;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">split</span><span class="o">=</span><span class="s1">&#39;test&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;Training set has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span><span class="si">}</span><span class="s2"> samples while test set &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">test_dataset</span><span class="p">)</span><span class="si">}</span><span class="s2"> samples&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training set has 300 samples while test set has 100 samples
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the CBM</span>
+
+<span class="n">latent_dims</span> <span class="o">=</span> <span class="mi">32</span>
+
+<span class="c1"># The encoder extracts a low-dimensional representation of the input</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+    <span class="c1"># A 3x3 convolution with 4 output channels</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(),</span>
+
+    <span class="c1"># A 3x3 convolution with 4 output channels with a batch norm</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
+
+    <span class="c1"># A 3x3 convolution with 4 output channels</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(),</span>
+
+    <span class="c1"># A 3x3 convolution with 4 output channels with a batch norm</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
+
+    <span class="c1"># A 5x5 max pooling layer</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)),</span>
+
+    <span class="c1"># Finally, we flatten and map it to a known latent space size</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Flatten</span><span class="p">(</span><span class="n">start_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">end_dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">576</span><span class="p">,</span> <span class="n">latent_dims</span><span class="p">),</span>  <span class="c1"># 576 comes from the size after flattening</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(),</span>
+<span class="p">)</span>
+<span class="c1"># The concept scorer predicts concept logits {traffic light color, ambulance presence}</span>
+<span class="n">c_layer</span> <span class="o">=</span> <span class="n">LinearConceptLayer</span><span class="p">(</span>
+    <span class="n">in_features</span><span class="o">=</span><span class="n">latent_dims</span><span class="p">,</span>
+    <span class="n">out_annotations</span><span class="o">=</span><span class="n">concept_names</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># The task predictor determines the value of the downstream label {cross}</span>
+<span class="n">y_predictor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">n_concepts</span><span class="p">,</span> <span class="n">latent_dims</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">latent_dims</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="c1"># output shape 1 as it is a binary task</span>
+<span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">encoder</span><span class="p">,</span> <span class="n">c_layer</span><span class="p">,</span> <span class="n">y_predictor</span><span class="p">)</span>
+
+<span class="c1"># Print it out</span>
+<span class="n">model</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sequential(
+  (0): Sequential(
+    (0): Conv2d(3, 4, kernel_size=(3, 3), stride=(1, 1), padding=same)
+    (1): LeakyReLU(negative_slope=0.01)
+    (2): Conv2d(4, 4, kernel_size=(3, 3), stride=(1, 1), padding=same)
+    (3): LeakyReLU(negative_slope=0.01)
+    (4): BatchNorm2d(4, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (5): Conv2d(4, 4, kernel_size=(3, 3), stride=(1, 1), padding=same)
+    (6): LeakyReLU(negative_slope=0.01)
+    (7): Conv2d(4, 4, kernel_size=(3, 3), stride=(1, 1), padding=same)
+    (8): LeakyReLU(negative_slope=0.01)
+    (9): BatchNorm2d(4, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (10): MaxPool2d(kernel_size=(5, 5), stride=(5, 5), padding=0, dilation=1, ceil_mode=False)
+    (11): Flatten(start_dim=1, end_dim=-1)
+    (12): Linear(in_features=576, out_features=32, bias=True)
+    (13): LeakyReLU(negative_slope=0.01)
+  )
+  (1): LinearConceptLayer(
+    (transform): Sequential(
+      (0): Linear(in_features=32, out_features=4, bias=True)
+      (1): Unflatten(dim=-1, unflattened_size=[4])
+      (2): Annotate()
+    )
+  )
+  (2): Sequential(
+    (0): Linear(in_features=4, out_features=32, bias=True)
+    (1): LeakyReLU(negative_slope=0.01)
+    (2): Linear(in_features=32, out_features=1, bias=True)
+  )
+)
+</pre></div>
+</div>
+</div>
+</div>
+<p>We train the model:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span>
+
+<span class="n">n_epochs</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">concept_loss_weight</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">lr</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">50</span>
+
+<span class="c1"># Define optimizer and loss function</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">encoder</span><span class="p">,</span> <span class="n">c_layer</span><span class="p">,</span> <span class="n">y_predictor</span><span class="p">)</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">)</span>
+<span class="n">loss_fn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">BCELoss</span><span class="p">()</span>
+
+<span class="c1"># Make a batch dataset loader</span>
+<span class="n">dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+    <span class="n">dataset</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+    <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">drop_last</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Standard PyTorch learning cycle</span>
+<span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">batch_idx</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dataloader</span><span class="p">):</span>
+        <span class="c1"># Encode input, then predict concept and downstream tasks activations</span>
+        <span class="n">emb</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">c_pred</span> <span class="o">=</span> <span class="n">c_layer</span><span class="p">(</span><span class="n">emb</span><span class="p">)</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">()</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">y_predictor</span><span class="p">(</span><span class="n">c_pred</span><span class="p">)</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Double loss on concepts and tasks</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="n">concept_loss_weight</span> <span class="o">*</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">c_pred</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+
+        <span class="c1"># Perform the update</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+        <span class="n">task_acc</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(((</span><span class="n">y_pred</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">==</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">))</span>
+        <span class="n">task_acc</span> <span class="o">=</span> <span class="n">task_acc</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">batch_idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Epoch [</span><span class="si">{</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">n_epochs</span><span class="si">}</span><span class="s2">], &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Step [</span><span class="si">{</span><span class="n">batch_idx</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dataloader</span><span class="p">)</span><span class="si">}</span><span class="s2">], &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Loss: </span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Task Accuracy: </span><span class="si">{</span><span class="n">task_acc</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%, &quot;</span>
+            <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch [5/20], Step [1/6], Loss: 3.0958, Task Accuracy: 96.00%, 
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch [10/20], Step [1/6], Loss: 1.9020, Task Accuracy: 90.00%, 
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch [15/20], Step [1/6], Loss: 1.8252, Task Accuracy: 90.00%, 
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch [20/20], Step [1/6], Loss: 0.8952, Task Accuracy: 94.00%, 
+</pre></div>
+</div>
+</div>
+</div>
+<p>We then evaluate this trained model on the test dataset. For this, we first load the test set into memory (important note: we would only recommend this for very small datasets like the toy example here. With large dataset, you should use batched data loaders instead):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load the train set to memory</span>
+<span class="n">x_train</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">c_train</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="n">dataset</span><span class="p">:</span>
+    <span class="n">x_train</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">y_train</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">c_train</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">x_train</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">y_train</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">c_train</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">c_train</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Load the test set to memory</span>
+<span class="n">x_test</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">c_test</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">y_test</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="n">test_dataset</span><span class="p">:</span>
+    <span class="n">x_test</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">y_test</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">c_test</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">x_test</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">y_test</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">c_test</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">c_test</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>And we can now evaluate the test concept and label predictions:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="n">c_pred</span> <span class="o">=</span> <span class="n">c_layer</span><span class="p">(</span><span class="n">encoder</span><span class="p">(</span><span class="n">x_test</span><span class="p">))</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">()</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">y_predictor</span><span class="p">(</span><span class="n">c_pred</span><span class="p">)</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Average task prediction:&quot;</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Average concept prediction:&quot;</span><span class="p">,</span> <span class="n">c_pred</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Average task prediction: [0.48655814]
+Average concept prediction: [0.59093165 0.41849053 0.17442954 0.1007252 ]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-2-compute-task-and-concept-performance">
+<h3><span class="section-number">3.4.2. </span>Step #2: Compute task and concept performance<a class="headerlink" href="#step-2-compute-task-and-concept-performance" title="Permalink to this heading">#</a></h3>
+<p>In our traffic light dataset, both concepts (“traffic light color” and “ambulance presence”) and the output (“cross”) are binary variables. This allows us to evaluate task and concept performance using the Area Under the Receiver Operating Characteristic Curve (ROC AUC) from prediction scores, a standard metric for binary classification problems.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">roc_auc_score</span>
+
+<span class="n">concept_performance</span> <span class="o">=</span> <span class="n">roc_auc_score</span><span class="p">(</span><span class="n">c_test</span><span class="p">,</span> <span class="n">c_pred</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span>
+<span class="n">task_performance</span> <span class="o">=</span> <span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Task performance: </span><span class="si">{</span><span class="n">task_performance</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">%&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Concept performance: </span><span class="si">{</span><span class="n">concept_performance</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">%&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Task performance: 94.67%
+Concept performance: 92.39%
+</pre></div>
+</div>
+</div>
+</div>
+<p>After a few epochs, the CBM is already able to accurately predict both concepts and tasks.</p>
+</section>
+<section id="step-3-compute-intervention-effectiveness">
+<h3><span class="section-number">3.4.3. </span>Step #3: Compute intervention effectiveness<a class="headerlink" href="#step-3-compute-intervention-effectiveness" title="Permalink to this heading">#</a></h3>
+<p>In our traffic light scenario, we can evaluate how intervening by correcting mispredicted concepts—such as “traffic light color” or “ambulance presence”—improves the model’s decision on whether to “cross.” By replacing predicted concept values with ground truth values and recalculating model performance, we measure how each intervention impacts downstream task accuracy. In PyC, this requires specifying a list of concept index groups to intervene on.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch_concepts.metrics</span> <span class="kn">import</span> <span class="n">intervention_score</span>
+
+<span class="n">intervention_groups</span> <span class="o">=</span> <span class="p">[[],</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
+
+<span class="c1"># Evaluate intervention effectiveness of each concept group individually</span>
+<span class="n">intervention_scores</span> <span class="o">=</span> <span class="n">intervention_score</span><span class="p">(</span>
+    <span class="n">y_predictor</span><span class="p">,</span>
+    <span class="n">c_pred</span><span class="p">,</span>
+    <span class="n">c_test</span><span class="p">,</span>
+    <span class="n">y_test</span><span class="p">,</span>
+    <span class="n">intervention_groups</span><span class="p">,</span>
+    <span class="n">auc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Individual intervention scores: </span><span class="si">{</span><span class="n">intervention_scores</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1"># Evaluate the global intervention effectiveness as the AUC</span>
+<span class="n">intervention_auc</span> <span class="o">=</span> <span class="n">intervention_score</span><span class="p">(</span>
+    <span class="n">y_predictor</span><span class="p">,</span>
+    <span class="n">c_pred</span><span class="p">,</span>
+    <span class="n">c_test</span><span class="p">,</span>
+    <span class="n">y_test</span><span class="p">,</span>
+    <span class="n">intervention_groups</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Intervention AUC: </span><span class="si">{</span><span class="n">intervention_auc</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Individual intervention scores: [0.9466666666666667, 0.9466666666666667, 0.9454166666666666, 0.943125]
+Intervention AUC: 0.9455
+</pre></div>
+</div>
+</div>
+</div>
+<p>The high intervention AUC indicates that concept interventions effectively improve the model’s task performance. Individual intervention scores show that correcting the “traffic light color” concept provides the most significant improvement in downstream task performance.</p>
+</section>
+<section id="step-4-compute-concept-completeness">
+<h3><span class="section-number">3.4.4. </span>Step #4: Compute concept completeness<a class="headerlink" href="#step-4-compute-concept-completeness" title="Permalink to this heading">#</a></h3>
+<p>To compute concept completeness, we need a black-box baseline model that uses both raw features and concept labels, as this matches the information provided to the CBM. The following code implements a simple black-box model with a similar parameter count to the CBM for a fair comparison.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Make maps containing the values of each concept</span>
+<span class="n">c_train_maps</span> <span class="o">=</span> <span class="n">c_train</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">c_train_maps</span> <span class="o">=</span> <span class="n">c_train_maps</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+<span class="n">c_test_maps</span> <span class="o">=</span> <span class="n">c_test</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">c_test_maps</span> <span class="o">=</span> <span class="n">c_test_maps</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+
+<span class="c1"># Put them together with the input features</span>
+<span class="n">xc_train</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">x_train</span><span class="p">,</span> <span class="n">c_train_maps</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">xc_test</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">x_test</span><span class="p">,</span> <span class="n">c_test_maps</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Defining a balck box baseline</span>
+<span class="n">baseline</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+    <span class="c1"># A 3x3 convolution with 4 output channels</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">3</span> <span class="o">+</span> <span class="n">n_concepts</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(),</span>
+
+    <span class="c1"># A 3x3 convolution with 4 output channels with a batch norm</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
+
+    <span class="c1"># A 3x3 convolution with 4 output channels</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(),</span>
+
+    <span class="c1"># A 3x3 convolution with 4 output channels with a batch norm</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
+
+    <span class="c1"># A 5x5 max pooling layer</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)),</span>
+
+    <span class="c1"># Finally, we flatten and map it to a known latent space size</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Flatten</span><span class="p">(</span><span class="n">start_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">end_dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">576</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="c1"># Define optimizer and loss function</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">baseline</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">)</span>
+<span class="n">loss_fn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">BCELoss</span><span class="p">()</span>
+
+<span class="c1"># Standard PyTorch learning cycle</span>
+<span class="n">baseline</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">):</span>
+   <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+
+   <span class="c1"># Encode input, then predict concept and downstream tasks activations</span>
+   <span class="n">y_pred_baseline</span> <span class="o">=</span> <span class="n">baseline</span><span class="p">(</span><span class="n">xc_train</span><span class="p">)</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+   <span class="c1"># Double loss on concepts and tasks</span>
+   <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">y_pred_baseline</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+   <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+   <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+<span class="n">baseline</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="n">y_pred_baseline</span> <span class="o">=</span> <span class="n">baseline</span><span class="p">(</span><span class="n">xc_test</span><span class="p">)</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">()</span>
+<span class="n">task_performance_baseline</span> <span class="o">=</span> <span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_baseline</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can then compute concept completeness as the ratio between the CBM’s downstream task performance and that of the black-box baseline. This ratio indicates the cost of incorporating a concept layer within the network to improve interpretability compared to an equivalent black-box model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch_concepts.metrics</span> <span class="kn">import</span> <span class="n">completeness_score</span>
+
+<span class="n">concept_completeness</span> <span class="o">=</span> <span class="n">completeness_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_baseline</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Task performance: </span><span class="si">{</span><span class="n">task_performance</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">%&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Task performance baseline: </span><span class="si">{</span><span class="n">task_performance_baseline</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">%&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Concept completeness: </span><span class="si">{</span><span class="n">concept_completeness</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">%&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Task performance: 94.67%
+Task performance baseline: 97.58%
+Concept completeness: 97.01%
+</pre></div>
+</div>
+</div>
+</div>
+<p>The resulting concept completeness score suggests that the CBM reflects a moderate drop in downstream task performance compared to the black-box baseline, in exchange for the increased interpretability.</p>
+</section>
+</section>
+<section id="take-home-message">
+<h2><span class="section-number">3.5. </span>Take Home Message<a class="headerlink" href="#take-home-message" title="Permalink to this heading">#</a></h2>
+<p>In summary, this chapter demonstrated how to quantitatively evaluate CBMs using metrics such as task and concept performance, intervention effectiveness, and concept completeness. These metrics provide a insight into the model’s accuracy and interpretability as follows:</p>
+<ul class="simple">
+<li><p><strong>Task and concept performance:</strong> This metric quantifies a CBM’s predictive performance, assessing how accurately the model predicts concepts and downstream tasks.</p></li>
+<li><p><strong>Intervention effectiveness:</strong> This metric quantifies the impact of concepts on a CBM’s task predictions. Specifically, concept interventions can be used to assess how correcting mispredicted concepts can improve downstream task performance.</p></li>
+<li><p><strong>Concept completeness:</strong> This metric quantifies the cost in downstream task performance of introducing a concept layer compared to a black-box model.</p></li>
+</ul>
+<p>The next chapter will discuss the accuracy-explainability trade-off, a potential challenge in concept-based interpretability, and strategies to mitigate its impact on CBMs.</p>
+<p><strong>Bibliography</strong></p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://arxiv.org/abs/2007.04612">Koh, Pang Wei, et al. “Concept Bottleneck Models.” International conference on machine learning. PMLR, 2020.</a></p></li>
+<li><p><a class="reference external" href="https://arxiv.org/abs/1910.07969">Yeh, Chih-Kuan, et al. “On Completeness-Aware Concept-Based Explanations in Deep Neural Networks.” Advances in neural information processing systems 33 (2020): 20554-20565.</a></p></li>
+</ul>
+<hr class="docutils" />
+<p><sup>1</sup>: The formulation provided here is evaluation the <em>completeness of the model</em>. Equivalently, we can compute the <em>completeness of the data</em> by replacing concept predictions with concept truth values in the numerator:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{B}(\theta_f, \theta_g, \theta_b, \mathcal{D}) = \frac{\sum_{(\mathbf{x}, \mathbf{c}, y) \in \mathcal{D}} \ p\big(y \mid \mathbf{c}\; ; \; \theta_f\big)}{\sum_{(\mathbf{x}, \mathbf{c}, y) \in \mathcal{D}} \ p\big(y \mid \mathbf{x}, \mathbf{c}\; ; \; \theta_b\big)}\]</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./part01_intro"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="chapter02_cbm.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">2. </span>Concept Bottleneck Models</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="chapter05_label_free_cbm.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">4. </span>Label-free Concept Bottleneck Models</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#predictive-performance">3.1. Predictive performance</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#task-performance">3.1.1. Task performance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#concept-performance">3.1.2. Concept performance</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intervention-effectiveness">3.2. Intervention effectiveness</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#concept-completeness">3.3. Concept completeness</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coding-practice-quantitative-metrics-for-concept-based-models">3.4. Coding practice: quantitative metrics for concept-based models</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-train-a-cbm">3.4.1. Step #1: Train a CBM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-compute-task-and-concept-performance">3.4.2. Step #2: Compute task and concept performance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-compute-intervention-effectiveness">3.4.3. Step #3: Compute intervention effectiveness</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-compute-concept-completeness">3.4.4. Step #4: Compute concept completeness</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#take-home-message">3.5. Take Home Message</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The PyC Team
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

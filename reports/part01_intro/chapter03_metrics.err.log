@@ -1,0 +1,63 @@
+Traceback (most recent call last):
+  File "/Users/mateo/miniforge3/envs/mlp/lib/python3.8/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/Users/mateo/miniforge3/envs/mlp/lib/python3.8/site-packages/nbclient/client.py", line 1265, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "/Users/mateo/miniforge3/envs/mlp/lib/python3.8/site-packages/jupyter_core/utils/__init__.py", line 166, in wrapped
+    return loop.run_until_complete(inner)
+  File "/Users/mateo/miniforge3/envs/mlp/lib/python3.8/asyncio/base_events.py", line 616, in run_until_complete
+    return future.result()
+  File "/Users/mateo/miniforge3/envs/mlp/lib/python3.8/site-packages/nbclient/client.py", line 703, in async_execute
+    await self.async_execute_cell(
+  File "/Users/mateo/miniforge3/envs/mlp/lib/python3.8/site-packages/nbclient/client.py", line 1021, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/Users/mateo/miniforge3/envs/mlp/lib/python3.8/site-packages/nbclient/client.py", line 915, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+xc_train = torch.cat((x_train, c_train), dim=1)
+xc_test = torch.cat((x_test, c_test), dim=1)
+
+# Defining a balck box baseline
+baseline = torch.nn.Sequential(
+    torch.nn.Linear(xc_train.shape[1], latent_dims),
+    torch.nn.LeakyReLU(),
+    torch.nn.Linear(latent_dims, latent_dims),
+    torch.nn.LeakyReLU(),
+    torch.nn.Linear(latent_dims, latent_dims),
+    torch.nn.LeakyReLU(),
+    torch.nn.Linear(latent_dims, y_train.shape[1])
+)
+
+# Define optimizer and loss function
+optimizer = torch.optim.AdamW(baseline.parameters(), lr=lr)
+loss_fn = torch.nn.BCELoss()
+
+# Standard PyTorch learning cycle
+baseline.train()
+for epoch in range(n_epochs):
+   optimizer.zero_grad()
+
+   # Encode input, then predict concept and downstream tasks activations
+   y_pred_baseline = baseline(xc_train).sigmoid()
+
+   # Double loss on concepts and tasks
+   loss = loss_fn(y_pred_baseline, y_train)
+   loss.backward()
+   optimizer.step()
+
+baseline.eval()
+y_pred_baseline = baseline(xc_test).sigmoid()
+task_performance_baseline = roc_auc_score(y_test, y_pred_baseline.detach())
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mRuntimeError[0m                              Traceback (most recent call last)
+Cell [0;32mIn[8], line 1[0m
+[0;32m----> 1[0m xc_train [38;5;241m=[39m [43mtorch[49m[38;5;241;43m.[39;49m[43mcat[49m[43m([49m[43m([49m[43mx_train[49m[43m,[49m[43m [49m[43mc_train[49m[43m)[49m[43m,[49m[43m [49m[43mdim[49m[38;5;241;43m=[39;49m[38;5;241;43m1[39;49m[43m)[49m
+[1;32m      2[0m xc_test [38;5;241m=[39m torch[38;5;241m.[39mcat((x_test, c_test), dim[38;5;241m=[39m[38;5;241m1[39m)
+[1;32m      4[0m [38;5;66;03m# Defining a balck box baseline[39;00m
+
+[0;31mRuntimeError[0m: Tensors must have same number of dimensions: got 4 and 2
+RuntimeError: Tensors must have same number of dimensions: got 4 and 2
+

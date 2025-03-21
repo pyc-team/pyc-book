@@ -1,0 +1,1512 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>2. Concept Bottleneck Models &#8212; Concept-based Interpretable Deep Learning in Python</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'part01_intro/chapter02_cbm';</script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="3. Quantitative metrics in concept interpretability" href="chapter03_metrics.html" />
+    <link rel="prev" title="1. The tale of the deep learning model that failed my driving exam" href="chapter01_teaser.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/pyc_logo_text.png" class="logo__image only-light" alt="Concept-based Interpretable Deep Learning in Python - Home"/>
+    <script>document.write(`<img src="../_static/pyc_logo_text.png" class="logo__image only-dark" alt="Concept-based Interpretable Deep Learning in Python - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Concept-based Interpretable Deep Learning in Python
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction to Concept-based Interpretability</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapter01_teaser.html">1. The tale of the deep learning model that failed my driving exam</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">2. Concept Bottleneck Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter03_metrics.html">3. Quantitative metrics in concept interpretability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapter05_label_free_cbm.html">4. Label-free Concept Bottleneck Models</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">PyC Team</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/pyc-team/pyc-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/pyc-team/pyc-book/issues/new?title=Issue%20on%20page%20%2Fpart01_intro/chapter02_cbm.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/part01_intro/chapter02_cbm.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Concept Bottleneck Models</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blueprint-for-concept-based-deep-learning-models">2.1. Blueprint for concept-based deep learning models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coding-practice">2.2. Coding practice</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-install-pyc">2.2.1. Step #1: Install PyC</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-load-traffic-scenario">2.2.2. Step #2: Load traffic scenario</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-define-the-cbm">2.2.3. Step #3: Define the CBM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-train-the-cbm">2.2.4. Step #4: Train the CBM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-5-trace-task-prediction-back-to-concept-activations">2.2.5. Step #5: Trace task prediction back to concept activations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-6-change-concept-activations-to-affect-task-predictions">2.2.6. Step #6: Change concept activations to affect task predictions</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#take-home-message">2.3. Take home message</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="concept-bottleneck-models">
+<h1><span class="section-number">2. </span>Concept Bottleneck Models<a class="headerlink" href="#concept-bottleneck-models" title="Permalink to this heading">#</a></h1>
+<p>In the “<a class="reference internal" href="chapter01_teaser.html"><span class="doc std std-doc">The tale of the deep learning model that failed my driving exam</span></a>”, we compared the decisions of an 18-year-old driver and a deep learning (DL) model when facing a tricky intersection where the driver had a green light, but an ambulance unexpectedly crossed. While both drivers stopped at the intersection, the teenager could explain how she arrived at that conclusion in terms of <em><strong>concepts</strong></em> like the light color and the presence (or absence) of the ambulance:</p>
+<blockquote>
+<div><p>“I would have crossed if the ambulance wasn’t there, but I know for sure that I would never cross in the presence of an ambulance.” [Example of a human driver explanation]</p>
+</div></blockquote>
+<p>In contrast, the DL model, despite making the correct decision and having been trained on millions of instances where lights and ambulances were around, lacked a satisfying decision-making process for the driving evaluator, as the model’s explanations were based on raw pixel activations:</p>
+<blockquote>
+<div><p>“If pixel 2890 had an RGB value of (28, 178, 111), the model would have chosen to cross.” [Example of a DL driver explanation]</p>
+</div></blockquote>
+<p>This example highlights the need for developing DL models with a transparent decision-making process like the teenager’s, especially in high-stakes fields such as medicine (deciding whether to give a certain treatment), finance (deciding whether to approve a loan), and law (checking whether a hiring system is fair).</p>
+<section id="blueprint-for-concept-based-deep-learning-models">
+<h2><span class="section-number">2.1. </span>Blueprint for concept-based deep learning models<a class="headerlink" href="#blueprint-for-concept-based-deep-learning-models" title="Permalink to this heading">#</a></h2>
+<blockquote>
+<div><p>⚠️ <strong>Warning:</strong> The following paragraphs assume a basic understanding of probability.</p>
+</div></blockquote>
+<p>From a technical standpoint, the problem can be described as follows: we aim to model a relationship between a set of random variables <span class="math notranslate nohighlight">\(X \in \mathcal{X}\)</span> representing low-level perceptive features (such as pixels) and a set of random variables corresponding to decisions <span class="math notranslate nohighlight">\(Y \in \mathcal{Y}\)</span> (whether to cross or stop).</p>
+<p>The DL model in the tale modeled the relationship as <span class="math notranslate nohighlight">\(p(Y = \texttt{cross} \mid X = \texttt{image’s pixels})\)</span>, directly mapping raw image data to a decision.</p>
+<figure class="align-center" id="directive-fig">
+<a class="reference internal image-reference" href="../_images/dnn.png"><img alt="../_images/dnn.png" src="../_images/dnn.png" style="width: 50%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 2.1 </span><span class="caption-text">A DL model directly maps raw image features (pixels) to a decision (e.g., whether to cross). Image created by the author with assistance from GPT4-o.</span><a class="headerlink" href="#directive-fig" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>The teenager, instead, modeled the same problem using intermediate <strong>higher-level variables — referred to as “concepts”, like the light color and the ambulance — leading to a more human-interpretable decision-making process</strong>. Based on such concepts, her reasoning could be expressed as <span class="math notranslate nohighlight">\(p(Y = \texttt{cross} \mid C_1 = \texttt{light color}, C_2 = \texttt{ambulance})\)</span>, where the concepts <span class="math notranslate nohighlight">\(C \in \mathcal{C}\)</span> provided insight into <strong>how</strong> she made a particular decision.</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="../_images/cym.png"><img alt="../_images/cym.png" src="../_images/cym.png" style="width: 50%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 2.2 </span><span class="caption-text">A human driver bases their decisions (e.g., whether to cross) on concepts (e.g., ambulance crossing). Image created by the author.</span><a class="headerlink" href="#id1" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>To emulate the teenager’s approach, we re-write the probability distribution <span class="math notranslate nohighlight">\(p(Y \mid X)\)</span> as if it was obtained by marginalizing the joint distribution <span class="math notranslate nohighlight">\(p(Y,C \mid X)\)</span> over the concepts <span class="math notranslate nohighlight">\(C\)</span>. Now, assuming that <span class="math notranslate nohighlight">\(Y\)</span> is conditionally independent of <span class="math notranslate nohighlight">\(X\)</span> given <span class="math notranslate nohighlight">\(C\)</span> we can obtain the following factorization:</p>
+<div class="math notranslate nohighlight">
+\[p(Y \mid X) = \sum_C p(Y, C \mid X) = \sum_C p(Y \mid C) \cdot p(C \mid X)\]</div>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="../_images/cbm.png"><img alt="../_images/cbm.png" src="../_images/cbm.png" style="width: 50%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 2.3 </span><span class="caption-text">A concept bottleneck model maps raw image features (pixels) to human-understandable concepts (e.g., ambulance crossing) and then relies on these predicted concepts to make decisions (e.g., whether to cross). Image created by the author with assistance from GPT4-o.</span><a class="headerlink" href="#id2" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>In this formulation, the model observes the input features <span class="math notranslate nohighlight">\(X\)</span> (such as pixels from an image) and maps them to a set of interpretable, high-level variables <span class="math notranslate nohighlight">\(C\)</span>, known as “<a class="reference external" href="https://arxiv.org/abs/1711.11279"><em><strong>concepts</strong></em></a>” <span id="id3">[<a class="reference internal" href="../bibliography.html#id5" title="David Bau, Bolei Zhou, Aditya Khosla, Aude Oliva, and Antonio Torralba. Network dissection: quantifying interpretability of deep visual representations. In Proceedings of the IEEE conference on computer vision and pattern recognition, 6541–6549. 2017.">BZK+17</a>, <a class="reference internal" href="../bibliography.html#id6" title="Ruth Fong and Andrea Vedaldi. Net2vec: quantifying and explaining how concepts are encoded by filters in deep neural networks. In Proceedings of the IEEE conference on computer vision and pattern recognition, 8730–8738. 2018.">FV18</a>, <a class="reference internal" href="../bibliography.html#id4" title="Been Kim, Martin Wattenberg, Justin Gilmer, Carrie Cai, James Wexler, Fernanda Viegas, and others. Interpretability beyond feature attribution: quantitative testing with concept activation vectors (tcav). In International conference on machine learning, 2668–2677. PMLR, 2018.">KWG+18</a>]</span>. These concepts are analogous to the reasoning elements identified by the teenager — such as the traffic light color or the presence of an ambulance. The second part of the model then uses these concepts to determine the decision <span class="math notranslate nohighlight">\(Y\)</span> (whether to cross or stop). This class of models is known as a <a class="reference external" href="https://arxiv.org/abs/2007.04612"><strong>Concept Bottleneck Model</strong></a> (CBM) <span id="id4">[<a class="reference internal" href="../bibliography.html#id2" title="Pang Wei Koh, Thao Nguyen, Yew Siang Tang, Stephen Mussmann, Emma Pierson, Been Kim, and Percy Liang. Concept bottleneck models. In International conference on machine learning, 5338–5348. PMLR, 2020.">KNT+20</a>]</span>. CBMs parameterize the conditional distributions with a pair of neural networks:</p>
+<ul class="simple">
+<li><p>A “<em>concept encoder</em>” <span class="math notranslate nohighlight">\(g(\cdot)\)</span>  that takes as an input a sample <span class="math notranslate nohighlight">\(\mathbf{x} \in \mathcal{X}\)</span>, and predicts a set of <span class="math notranslate nohighlight">\(k\)</span> concepts <span class="math notranslate nohighlight">\(\mathbf{c} \in \mathcal{C}\)</span>. This network parameterizes the concept distribution.</p></li>
+<li><p>A “<em>task predictor</em>” <span class="math notranslate nohighlight">\(f(\cdot)\)</span> that takes as an input a concept vector <span class="math notranslate nohighlight">\(\mathbf{c} \in \mathcal{C}\)</span> and predicts an output label <span class="math notranslate nohighlight">\(y \in \mathcal{Y}\)</span>. This network parameterizes the output distribution.</p></li>
+</ul>
+<p>Given a concept-based dataset of i.i.d. triples (input, concepts, task) <span class="math notranslate nohighlight">\(D = \{(\mathbf{x}, \mathbf{c}, y)\}\)</span>, the CBM’s parameters (<span class="math notranslate nohighlight">\(\theta_g\)</span> and <span class="math notranslate nohighlight">\(\theta_f\)</span>) are usually optimized via gradient descent by maximizing the empirical log-likelihood of the training data:</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    (\theta_g, \theta_f) &amp;= \underset{\theta_g, \theta_f}{\operatorname{arg max}} \mathcal{L}\big(\theta_g, \theta_f, D \big) \\ &amp;= \underset{\theta_g, \theta_f}{\operatorname{arg max}} \sum_{(\mathbf{x}, \mathbf{c}, y) \in D} \log p\big(Y = \mathbf{y}, C=\mathbf{c} \mid X=\mathbf{x} \; ; \; \theta_g, \theta_f \big) \\ &amp;= \underset{\theta_g, \theta_f}{\operatorname{arg max}} \sum_{(\mathbf{x}, \mathbf{c}, y) \in D} \log p\big(Y = \mathbf{y} \mid C=\mathbf{c} \; ; \; \theta_f \big) + \log p\big(C=\mathbf{c} \mid X=\mathbf{x} \; ; \; \theta_g \big)
+\end{align*}\]</div>
+<p>In most instances (but not all), we are trying to model a scenario where we are given <span class="math notranslate nohighlight">\(k\)</span> different concept annotations during training and the output task can be one of <span class="math notranslate nohighlight">\(L\)</span> different labels (e.g., multi-task classification).
+In this case, it is common to model the data distribution by interpreting the output of <span class="math notranslate nohighlight">\(g\)</span> and <span class="math notranslate nohighlight">\(f\)</span> as probabilities over their output domains.
+That is</p>
+<ol class="arabic simple">
+<li><p>The concept encoder <span class="math notranslate nohighlight">\(g(x) = \hat{\mathbf{c}} \in [0, 1]^k\)</span> outputs a <span class="math notranslate nohighlight">\(k\)</span>-dimensional vector where <span class="math notranslate nohighlight">\(\hat{\mathbf{c}}_i = p(\mathbf{c}_i = 1 \mid X = \mathbf{x})\)</span>, and</p></li>
+<li><p>The label predictor <span class="math notranslate nohighlight">\(f(\mathbf{c}) = \hat{y} \in [0, 1]^L\)</span> outputs a <span class="math notranslate nohighlight">\(L\)</span>-dimensional vector where <span class="math notranslate nohighlight">\(L\)</span> is the number of output labels, <span class="math notranslate nohighlight">\(\sum_i \hat{\mathbf{y}}_i = 1\)</span> (e.g., a softmax activation is used), and <span class="math notranslate nohighlight">\(\hat{\mathbf{y}}_i = p(Y = i \mid C = \mathbf{c})\)</span>.</p></li>
+</ol>
+<p>In this instance, the likelihood above can be expressed as:</p>
+<div class="amsmath math notranslate nohighlight">
+\[\begin{align*}
+    (\theta_g, \theta_f) &amp;= \underset{\theta_g, \theta_f}{\operatorname{arg max}} \sum_{(\mathbf{x}, \mathbf{c}, y) \in D} \Bigg( \log f\big(g(\mathbf{x} \; ; \; \theta_g) \; ; \; \theta_f \big)_y + \sum_{i = 1}^k \Big( \mathbf{c}_i \log g(\mathbf{x} \; ; \; \theta_g) + (1 - \mathbf{c}_i) \log \big(1 - g(\mathbf{x} \; ; \; \theta_g)\big) \Big) \Bigg) \\
+    &amp;= \underset{\theta_g, \theta_f}{\operatorname{arg min}} \sum_{(\mathbf{x}, \mathbf{c}, y) \in D}  \Bigg( \mathcal{L}_\text{CE}\big(y, f\big(g(\mathbf{x} \; ; \; \theta_g) \; ; \; \theta_f \big)\big) + \mathcal{L}_\text{BCE}\big(\mathbf{c}, g(\mathbf{x} \; ; \; \theta_g)\big) \Bigg)
+    
+\end{align*}\]</div>
+<p>Where <span class="math notranslate nohighlight">\(\mathcal{L}_\text{CE}\)</span> and <span class="math notranslate nohighlight">\(\mathcal{L}_\text{BCE}\)</span> stand for the standard <a class="reference external" href="https://en.wikipedia.org/wiki/Cross-entropy">cross entropy and binary cross entropy losses</a> (notice the <span class="math notranslate nohighlight">\(\operatorname{arg max}\)</span> turned into an <span class="math notranslate nohighlight">\(\operatorname{arg min}\)</span> as we are working with negative log-likelihoods when using the cross entropy losses).</p>
+<p>In CBMs there are three different ways to optimize this objective function:</p>
+<ol class="arabic simple">
+<li><p><strong>Independent training</strong> optimizes <span class="math notranslate nohighlight">\(f\)</span> and <span class="math notranslate nohighlight">\(g\)</span> independently: <span class="math notranslate nohighlight">\(f\)</span> is trained using ground truth concepts <span class="math notranslate nohighlight">\(c\)</span> as input. At test time, <span class="math notranslate nohighlight">\(f\)</span> takes <span class="math notranslate nohighlight">\(g(x)\)</span> as input.</p></li>
+<li><p><strong>Sequential training</strong> first optimizes <span class="math notranslate nohighlight">\(g\)</span> independently. Once trained, the parameters of the concept encoder <span class="math notranslate nohighlight">\(g\)</span> are frozen, and <span class="math notranslate nohighlight">\(f\)</span> is trained using <span class="math notranslate nohighlight">\(g(x)\)</span> as input.</p></li>
+<li><p><strong>Joint training</strong>: optimizes <span class="math notranslate nohighlight">\(f\)</span> and <span class="math notranslate nohighlight">\(g\)</span> at the same time and <span class="math notranslate nohighlight">\(f\)</span> takes as input <span class="math notranslate nohighlight">\(g(x)\)</span>.</p></li>
+</ol>
+<p>The following coding practice introduces you to implementing CBMs and shows how to query CBMs to understand the model’s decision-making process.</p>
+</section>
+<section id="coding-practice">
+<h2><span class="section-number">2.2. </span>Coding practice<a class="headerlink" href="#coding-practice" title="Permalink to this heading">#</a></h2>
+<p>In this practice, we implement a Concept Bottleneck Model (CBM) for a simple traffic light scenario where decisions to cross or stop depend on two concepts: the traffic light being green and the presence of an ambulance. The model predicts these concepts and uses them to make decisions.</p>
+<blockquote>
+<div><p>⚠️ <strong>Warning:</strong> This section assumes a basic understanding of programming machine learning scripts using deep learning frameworks, specifically PyTorch. If you’re new to PyTorch, consider starting with <a class="reference external" href="https://pytorch.org/tutorials/beginner/basics/intro.html">these introductory tutorials</a> to get up to speed.</p>
+</div></blockquote>
+<section id="step-1-install-pyc">
+<h3><span class="section-number">2.2.1. </span>Step #1: Install PyC<a class="headerlink" href="#step-1-install-pyc" title="Permalink to this heading">#</a></h3>
+<p>First, we install the necessary Python packages required to implement CBMs. This includes our <a class="reference external" href="https://github.com/pyc-team/pytorch_concepts"><code class="docutils literal notranslate"><span class="pre">pytorch-concepts</span></code></a> library, which runs on top of standard deep learning libraries (<a class="reference external" href="https://pytorch.org/"><code class="docutils literal notranslate"><span class="pre">PyTorch</span></code></a>).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%capture
+!pip install torch
+!pip install https://github.com/pyc-team/pytorch_concepts/releases/download/v0.0.10/pytorch_concepts-0.0.10.tar.gz
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-2-load-traffic-scenario">
+<h3><span class="section-number">2.2.2. </span>Step #2: Load traffic scenario<a class="headerlink" href="#step-2-load-traffic-scenario" title="Permalink to this heading">#</a></h3>
+<p>Next, we load the dataset for our traffic light scenario. This toy synthetic dataset, programatically generated in the call below, comprises a collection of images of a single intersection under different conditions. Each image is an image of an intersection where the “target” or “selected” car (the car we need
+to make the decision for) is approaching the intersection from the left (moving in a west-to-east direction).
+The task is to decide whether this car should <code class="docutils literal notranslate"><span class="pre">stop</span></code> (label is 0) or <code class="docutils literal notranslate"><span class="pre">continue</span></code> (task label is 1).</p>
+<p>To help with learning concept-based models, this dataset’s images are annotated with the
+following concept labels:</p>
+<ul class="simple">
+<li><p><strong>Green Light on Selected Lane</strong>: Indicates whether the traffic light on the lane of the selected car is green or not.</p></li>
+<li><p><strong>Car in Intersection</strong>: Specifies whether another car is visible in the intersection.</p></li>
+<li><p><strong>Ambulance Seen</strong>: Specifies whether an ambulance is visible in the scene.</p></li>
+<li><p><strong>Ambulance Approaching Perpendicular to Selected Car</strong>: Specifies whether an ambulance is approaching in a north-to-south or south-to-north direction (i.e., it is moving perpendicularly w.r.t. the target car).</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Making seeds fixed for determinism</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="n">seed</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Setting random seeds to </span><span class="si">{</span><span class="n">seed</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Setting random seeds to 42
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch_concepts.data</span> <span class="kn">import</span> <span class="n">TrafficLights</span>
+
+<span class="c1"># In practice, we need datasets that are significantly larger, but we will</span>
+<span class="c1"># not use those for this example as we want to focus on the main ideas rather</span>
+<span class="c1"># than on performane</span>
+<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">500</span>
+
+<span class="c1"># Loading dataset</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">TrafficLights</span><span class="p">(</span>
+    <span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span>
+    <span class="n">possible_starting_directions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;west&#39;</span><span class="p">],</span>
+    <span class="n">resize_final_image</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+    <span class="n">selected_concepts</span><span class="o">=</span><span class="p">[</span>
+        <span class="s1">&#39;green light on selected lane&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;car in intersection&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ambulance seen&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ambulance approaching perpendicular to selected car&#39;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">split</span><span class="o">=</span><span class="s1">&#39;train&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">concept_names</span><span class="p">,</span> <span class="n">task_names</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">concept_names</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">task_names</span>
+<span class="n">n_concepts</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">concept_names</span><span class="p">)</span>
+
+<span class="c1"># Example of scenario</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input shape: </span><span class="si">{</span><span class="n">dataset</span><span class="o">.</span><span class="n">input_shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using </span><span class="si">{</span><span class="n">n_concepts</span><span class="si">}</span><span class="s2"> concepts with semantics: </span><span class="si">{</span><span class="n">concept_names</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Task has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">task_names</span><span class="p">)</span><span class="si">}</span><span class="s2"> downstream tasks: </span><span class="si">{</span><span class="n">task_names</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  0%|                                                                                                                                                              | 0/300 [00:00&lt;?, ?it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  0%|▌                                                                                                                                                     | 1/300 [00:02&lt;13:36,  2.73s/it]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  2%|██▌                                                                                                                                                   | 5/300 [00:02&lt;02:06,  2.32it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  3%|████▌                                                                                                                                                 | 9/300 [00:02&lt;01:01,  4.76it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  5%|██████▉                                                                                                                                              | 14/300 [00:03&lt;00:33,  8.48it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  6%|████████▉                                                                                                                                            | 18/300 [00:03&lt;00:23, 11.75it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  7%|██████████▉                                                                                                                                          | 22/300 [00:03&lt;00:18, 15.31it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  9%|█████████████▉                                                                                                                                       | 28/300 [00:03&lt;00:12, 21.17it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 11%|███████████████▉                                                                                                                                     | 32/300 [00:03&lt;00:10, 24.41it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 12%|█████████████████▉                                                                                                                                   | 36/300 [00:03&lt;00:09, 27.01it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 13%|███████████████████▊                                                                                                                                 | 40/300 [00:03&lt;00:09, 28.76it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 15%|█████████████████████▊                                                                                                                               | 44/300 [00:03&lt;00:08, 30.64it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 16%|███████████████████████▊                                                                                                                             | 48/300 [00:03&lt;00:08, 31.35it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 17%|█████████████████████████▊                                                                                                                           | 52/300 [00:04&lt;00:07, 32.08it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 19%|███████████████████████████▊                                                                                                                         | 56/300 [00:04&lt;00:07, 32.93it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 20%|██████████████████████████████▎                                                                                                                      | 61/300 [00:04&lt;00:06, 36.78it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 22%|████████████████████████████████▎                                                                                                                    | 65/300 [00:04&lt;00:06, 36.79it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 23%|██████████████████████████████████▊                                                                                                                  | 70/300 [00:04&lt;00:06, 37.11it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 25%|████████████████████████████████████▊                                                                                                                | 74/300 [00:04&lt;00:06, 36.58it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 26%|██████████████████████████████████████▋                                                                                                              | 78/300 [00:04&lt;00:05, 37.16it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 28%|█████████████████████████████████████████▏                                                                                                           | 83/300 [00:04&lt;00:05, 40.40it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 29%|███████████████████████████████████████████▋                                                                                                         | 88/300 [00:05&lt;00:05, 40.53it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 31%|██████████████████████████████████████████████▏                                                                                                      | 93/300 [00:05&lt;00:05, 40.60it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 33%|████████████████████████████████████████████████▋                                                                                                    | 98/300 [00:05&lt;00:05, 39.61it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 34%|██████████████████████████████████████████████████▎                                                                                                 | 102/300 [00:05&lt;00:05, 38.69it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 35%|████████████████████████████████████████████████████▎                                                                                               | 106/300 [00:05&lt;00:05, 38.19it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 37%|███████████████████████████████████████████████████████▎                                                                                            | 112/300 [00:05&lt;00:04, 40.04it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 39%|█████████████████████████████████████████████████████████▋                                                                                          | 117/300 [00:05&lt;00:04, 37.20it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 41%|████████████████████████████████████████████████████████████▏                                                                                       | 122/300 [00:05&lt;00:04, 39.82it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42%|██████████████████████████████████████████████████████████████▋                                                                                     | 127/300 [00:05&lt;00:04, 41.87it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 44%|█████████████████████████████████████████████████████████████████                                                                                   | 132/300 [00:06&lt;00:04, 40.91it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 46%|███████████████████████████████████████████████████████████████████▌                                                                                | 137/300 [00:06&lt;00:04, 39.38it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 47%|██████████████████████████████████████████████████████████████████████                                                                              | 142/300 [00:06&lt;00:03, 39.85it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 49%|████████████████████████████████████████████████████████████████████████▌                                                                           | 147/300 [00:06&lt;00:03, 41.79it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 51%|██████████████████████████████████████████████████████████████████████████▉                                                                         | 152/300 [00:06&lt;00:03, 39.59it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 52%|█████████████████████████████████████████████████████████████████████████████▍                                                                      | 157/300 [00:06&lt;00:03, 38.70it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 54%|███████████████████████████████████████████████████████████████████████████████▍                                                                    | 161/300 [00:06&lt;00:03, 37.89it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 55%|█████████████████████████████████████████████████████████████████████████████████▍                                                                  | 165/300 [00:06&lt;00:03, 37.91it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 56%|███████████████████████████████████████████████████████████████████████████████████▎                                                                | 169/300 [00:07&lt;00:03, 37.55it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 58%|█████████████████████████████████████████████████████████████████████████████████████▎                                                              | 173/300 [00:07&lt;00:03, 36.34it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 59%|███████████████████████████████████████████████████████████████████████████████████████▊                                                            | 178/300 [00:07&lt;00:03, 39.81it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 61%|██████████████████████████████████████████████████████████████████████████████████████████▎                                                         | 183/300 [00:07&lt;00:02, 40.70it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 63%|████████████████████████████████████████████████████████████████████████████████████████████▋                                                       | 188/300 [00:07&lt;00:02, 41.71it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 64%|███████████████████████████████████████████████████████████████████████████████████████████████▏                                                    | 193/300 [00:07&lt;00:02, 36.75it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 67%|██████████████████████████████████████████████████████████████████████████████████████████████████▋                                                 | 200/300 [00:07&lt;00:02, 44.21it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 68%|█████████████████████████████████████████████████████████████████████████████████████████████████████▏                                              | 205/300 [00:07&lt;00:02, 39.35it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 70%|███████████████████████████████████████████████████████████████████████████████████████████████████████▌                                            | 210/300 [00:08&lt;00:02, 41.77it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 72%|██████████████████████████████████████████████████████████████████████████████████████████████████████████                                          | 215/300 [00:08&lt;00:02, 40.70it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 73%|████████████████████████████████████████████████████████████████████████████████████████████████████████████▌                                       | 220/300 [00:08&lt;00:02, 38.63it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 75%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████▌                                     | 224/300 [00:08&lt;00:01, 38.07it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 76%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████▍                                   | 228/300 [00:08&lt;00:01, 37.57it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 78%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████▍                                | 234/300 [00:08&lt;00:01, 41.69it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 80%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▉                              | 239/300 [00:08&lt;00:01, 38.81it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 82%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▊                           | 245/300 [00:08&lt;00:01, 42.43it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 84%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▊                        | 251/300 [00:09&lt;00:01, 39.53it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 85%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▎                     | 256/300 [00:09&lt;00:01, 39.88it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 87%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▊                   | 261/300 [00:09&lt;00:00, 41.53it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 89%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▏                | 266/300 [00:09&lt;00:00, 42.50it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 90%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▋              | 271/300 [00:09&lt;00:00, 42.81it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 92%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▏           | 276/300 [00:09&lt;00:00, 38.23it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 94%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▋         | 281/300 [00:09&lt;00:00, 38.09it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 96%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▌      | 287/300 [00:09&lt;00:00, 41.71it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 97%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████    | 292/300 [00:10&lt;00:00, 39.53it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 99%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▌ | 297/300 [00:10&lt;00:00, 38.22it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 300/300 [00:10&lt;00:00, 29.00it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  0%|                                                                                                                                                              | 0/100 [00:00&lt;?, ?it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1%|█▌                                                                                                                                                    | 1/100 [00:02&lt;04:06,  2.49s/it]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  5%|███████▌                                                                                                                                              | 5/100 [00:02&lt;00:37,  2.54it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  9%|█████████████▌                                                                                                                                        | 9/100 [00:02&lt;00:17,  5.20it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 13%|███████████████████▎                                                                                                                                 | 13/100 [00:02&lt;00:10,  8.38it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 17%|█████████████████████████▎                                                                                                                           | 17/100 [00:02&lt;00:06, 11.91it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 21%|███████████████████████████████▎                                                                                                                     | 21/100 [00:03&lt;00:05, 15.66it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 26%|██████████████████████████████████████▋                                                                                                              | 26/100 [00:03&lt;00:03, 20.95it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 32%|███████████████████████████████████████████████▋                                                                                                     | 32/100 [00:03&lt;00:02, 27.78it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 37%|███████████████████████████████████████████████████████▏                                                                                             | 37/100 [00:03&lt;00:02, 29.72it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42%|██████████████████████████████████████████████████████████████▌                                                                                      | 42/100 [00:03&lt;00:01, 34.00it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 47%|██████████████████████████████████████████████████████████████████████                                                                               | 47/100 [00:03&lt;00:01, 34.22it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 53%|██████████████████████████████████████████████████████████████████████████████▉                                                                      | 53/100 [00:03&lt;00:01, 37.73it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 58%|██████████████████████████████████████████████████████████████████████████████████████▍                                                              | 58/100 [00:03&lt;00:01, 39.71it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 63%|█████████████████████████████████████████████████████████████████████████████████████████████▊                                                       | 63/100 [00:03&lt;00:00, 40.46it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 68%|█████████████████████████████████████████████████████████████████████████████████████████████████████▎                                               | 68/100 [00:04&lt;00:00, 40.07it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 73%|████████████████████████████████████████████████████████████████████████████████████████████████████████████▊                                        | 73/100 [00:04&lt;00:00, 39.53it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 78%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▏                                | 78/100 [00:04&lt;00:00, 40.34it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 84%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▏                       | 84/100 [00:04&lt;00:00, 42.88it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 89%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▌                | 89/100 [00:04&lt;00:00, 38.87it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 94%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████         | 94/100 [00:04&lt;00:00, 40.77it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 99%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▌ | 99/100 [00:04&lt;00:00, 42.47it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 100/100 [00:04&lt;00:00, 20.54it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  0%|                                                                                                                                                              | 0/100 [00:00&lt;?, ?it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1%|█▌                                                                                                                                                    | 1/100 [00:02&lt;03:54,  2.37s/it]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  6%|█████████                                                                                                                                             | 6/100 [00:02&lt;00:29,  3.23it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 12%|█████████████████▉                                                                                                                                   | 12/100 [00:02&lt;00:11,  7.45it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 17%|█████████████████████████▎                                                                                                                           | 17/100 [00:02&lt;00:07, 10.76it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 21%|███████████████████████████████▎                                                                                                                     | 21/100 [00:02&lt;00:05, 13.96it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 26%|██████████████████████████████████████▋                                                                                                              | 26/100 [00:02&lt;00:04, 18.34it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 30%|████████████████████████████████████████████▋                                                                                                        | 30/100 [00:03&lt;00:03, 21.72it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 36%|█████████████████████████████████████████████████████▋                                                                                               | 36/100 [00:03&lt;00:02, 28.40it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 41%|█████████████████████████████████████████████████████████████                                                                                        | 41/100 [00:03&lt;00:01, 29.93it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 46%|████████████████████████████████████████████████████████████████████▌                                                                                | 46/100 [00:03&lt;00:01, 32.63it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 51%|███████████████████████████████████████████████████████████████████████████▉                                                                         | 51/100 [00:03&lt;00:01, 36.48it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 56%|███████████████████████████████████████████████████████████████████████████████████▍                                                                 | 56/100 [00:03&lt;00:01, 38.23it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 61%|██████████████████████████████████████████████████████████████████████████████████████████▉                                                          | 61/100 [00:03&lt;00:01, 36.18it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 66%|██████████████████████████████████████████████████████████████████████████████████████████████████▎                                                  | 66/100 [00:03&lt;00:00, 39.30it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 71%|█████████████████████████████████████████████████████████████████████████████████████████████████████████▊                                           | 71/100 [00:04&lt;00:00, 41.48it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 76%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████▏                                   | 76/100 [00:04&lt;00:00, 42.45it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 81%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▋                            | 81/100 [00:04&lt;00:00, 40.58it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 86%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▏                    | 86/100 [00:04&lt;00:00, 39.09it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 92%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████            | 92/100 [00:04&lt;00:00, 42.99it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 97%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▌    | 97/100 [00:04&lt;00:00, 41.31it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 100/100 [00:04&lt;00:00, 21.10it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Input shape: (3, 64, 64)
+Using 4 concepts with semantics: [&#39;green light on selected lane&#39;, &#39;car in intersection&#39;, &#39;ambulance seen&#39;, &#39;ambulance approaching perpendicular to selected car&#39;]
+Task has 1 downstream tasks: [&#39;continue&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can see some of examples of this dataset to get a sense as to how they look:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="c1"># Select a random sample of indices for the grid</span>
+<span class="n">grid_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">indices</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="p">)),</span> <span class="n">grid_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">grid_size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">sampled_images</span> <span class="o">=</span> <span class="p">[</span><span class="n">dataset</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">]</span>
+<span class="n">sampled_labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">dataset</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">]</span>
+<span class="n">label_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;stop&#39;</span><span class="p">,</span> <span class="s1">&#39;continue&#39;</span><span class="p">]</span>
+
+<span class="c1"># Plot images in a grid</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">grid_size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">grid_size</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">axes</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>  <span class="c1"># Flatten to easily iterate over axes if needed</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">axes</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+        <span class="n">sampled_images</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Label: </span><span class="si">{</span><span class="n">label_names</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">sampled_labels</span><span class="p">[</span><span class="n">i</span><span class="p">])]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>  <span class="c1"># Hide axes</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/4332d8d9647d9e2715511f08292280abd0635d3a6df0e628a7c947753350a5d7.png" src="../_images/4332d8d9647d9e2715511f08292280abd0635d3a6df0e628a7c947753350a5d7.png" />
+</div>
+</div>
+</section>
+<section id="step-3-define-the-cbm">
+<h3><span class="section-number">2.2.3. </span>Step #3: Define the CBM<a class="headerlink" href="#step-3-define-the-cbm" title="Permalink to this heading">#</a></h3>
+<p>We are now ready to construct our first CBM. The model comprises three main components: encoder, concept predictor, and task predictor.
+These components are combined sequentially to form the complete CBM architecture.</p>
+<p><strong>Encoder</strong>: The encoder takes as input low-level features <span class="math notranslate nohighlight">\(X\)</span> and produces a lower-dimensional representation. The specific architecture of the encoder depends on the input data type; it could be a convolutional neural network, a recurrent neural network, a transformer, or another suitable model.</p>
+<p>Given that we will be working with images, we will use a very simple <strong>Convolutional Neural Network (CNN)</strong>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="n">latent_dims</span> <span class="o">=</span> <span class="mi">32</span>
+
+<span class="c1"># The encoder extracts a low-dimensional representation of the input</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+    <span class="c1"># A 3x3 convolution with 4 output channels</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(),</span>
+
+    <span class="c1"># A 3x3 convolution with 4 output channels with a batch norm</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
+
+    <span class="c1"># A 3x3 convolution with 4 output channels</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(),</span>
+
+    <span class="c1"># A 3x3 convolution with 4 output channels with a batch norm</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
+
+    <span class="c1"># A 5x5 max pooling layer</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)),</span>
+
+    <span class="c1"># Finally, we flatten and map it to a known latent space size</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Flatten</span><span class="p">(</span><span class="n">start_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">end_dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">576</span><span class="p">,</span> <span class="n">latent_dims</span><span class="p">),</span>  <span class="c1"># 576 comes from the size after flattening</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(),</span>
+<span class="p">)</span>
+<span class="n">encoder</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sequential(
+  (0): Conv2d(3, 4, kernel_size=(3, 3), stride=(1, 1), padding=same)
+  (1): LeakyReLU(negative_slope=0.01)
+  (2): Conv2d(4, 4, kernel_size=(3, 3), stride=(1, 1), padding=same)
+  (3): LeakyReLU(negative_slope=0.01)
+  (4): BatchNorm2d(4, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (5): Conv2d(4, 4, kernel_size=(3, 3), stride=(1, 1), padding=same)
+  (6): LeakyReLU(negative_slope=0.01)
+  (7): Conv2d(4, 4, kernel_size=(3, 3), stride=(1, 1), padding=same)
+  (8): LeakyReLU(negative_slope=0.01)
+  (9): BatchNorm2d(4, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (10): MaxPool2d(kernel_size=(5, 5), stride=(5, 5), padding=0, dilation=1, ceil_mode=False)
+  (11): Flatten(start_dim=1, end_dim=-1)
+  (12): Linear(in_features=576, out_features=32, bias=True)
+  (13): LeakyReLU(negative_slope=0.01)
+)
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Linear Concept Layer</strong>: A linear concept layer takes an embedding as input and generates a set of concept representations, which in this case correspond to concept logits. To implement concept layers, we use the <a class="reference external" href="https://github.com/pyc-team/pytorch_concepts"><code class="docutils literal notranslate"><span class="pre">PyC</span></code></a> library.</p>
+<p>To define this layer, the following inputs are required:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">in_features</span></code>: The size of the embedding generated by the encoder.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">annotations</span></code>: A list of integers or list where each entry represents an axis of the output concept tensor, and, if it isa list, each element in that list represent the semantics assigned to the neuron at that corresponding index for that dimension.</p></li>
+</ul>
+<p>For example, we can make a <code class="docutils literal notranslate"><span class="pre">LinearConceptLayer</span></code> that takes as an input a latent representation of size <code class="docutils literal notranslate"><span class="pre">8</span></code> and outputs two neurons aligned to concepts <code class="docutils literal notranslate"><span class="pre">[&quot;ambulance&quot;,</span> <span class="pre">&quot;green</span> <span class="pre">light&quot;]</span></code> through the following calls:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">c_layer_annotated</span> <span class="o">=</span> <span class="n">LinearConceptLayer</span><span class="p">(</span>
+    <span class="n">in_features</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">out_annotations</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ambulance&quot;</span><span class="p">,</span> <span class="s2">&quot;green light&quot;</span><span class="p">],</span> <span class="c1"># If we wish to annotate the output neurons with known concepts</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Or:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">c_layer_unannotated</span> <span class="o">=</span> <span class="n">LinearConceptLayer</span><span class="p">(</span>
+    <span class="n">in_features</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">out_annotations</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="c1"># If we do not wish to annotate the output neurons</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<br>
+<p>In our example, this layer produces two concept logits corresponding to “traffic light green” and “ambulance crossing”.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch_concepts.nn</span> <span class="kn">import</span> <span class="n">LinearConceptLayer</span>
+
+<span class="c1"># The concept scorer predicts concept logits {traffic light color, ambulance presence}</span>
+<span class="n">c_layer</span> <span class="o">=</span> <span class="n">LinearConceptLayer</span><span class="p">(</span>
+    <span class="n">in_features</span><span class="o">=</span><span class="n">latent_dims</span><span class="p">,</span>
+    <span class="n">out_annotations</span><span class="o">=</span><span class="n">concept_names</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Architecture:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">c_layer</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Expected concepts in output tensor:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">c_layer</span><span class="o">.</span><span class="n">annotations</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Architecture:
+ LinearConceptLayer(
+  (transform): Sequential(
+    (0): Linear(in_features=32, out_features=4, bias=True)
+    (1): Unflatten(dim=-1, unflattened_size=[4])
+    (2): Annotate()
+  )
+)
+Expected concepts in output tensor:
+ [[&#39;green light on selected lane&#39;, &#39;car in intersection&#39;, &#39;ambulance seen&#39;, &#39;ambulance approaching perpendicular to selected car&#39;]]
+</pre></div>
+</div>
+</div>
+</div>
+<p>In <code class="docutils literal notranslate"><span class="pre">PyC</span></code> concept layers produce as output an object of type <code class="docutils literal notranslate"><span class="pre">AnnotatedTensor</span></code> whose dimensions are labeled with the provided concept names:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">concept_tensor</span> <span class="o">=</span> <span class="n">c_layer</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">latent_dims</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">concept_tensor</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnotatedTensor of shape torch.Size([1, 4]), dtype torch.float32, and annotations [None, [&#39;green light on selected lane&#39;, &#39;car in intersection&#39;, &#39;ambulance seen&#39;, &#39;ambulance approaching perpendicular to selected car&#39;]] for each dimension.
+</pre></div>
+</div>
+</div>
+</div>
+<p>The object <code class="docutils literal notranslate"><span class="pre">AnnotatedTensor</span></code> has built-in methods to extract concept representations from specific dimensions which might be practical for in-depth analysis:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">concept_traffic_light</span> <span class="o">=</span> <span class="n">concept_tensor</span><span class="o">.</span><span class="n">extract_by_annotations</span><span class="p">([</span><span class="s1">&#39;green light on selected lane&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">concept_traffic_light</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnotatedTensor of shape torch.Size([1, 1]), dtype torch.float32, and annotations [None, [&#39;green light on selected lane&#39;]] for each dimension.
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Task Predictor</strong>: Takes as input the predicted concept representations to determine the final decision on whether to cross or not. In this case, we implement the task predictor with a multi-layer perceptron, but we will discuss more advanced (and interpretable) task predictors later on in this series.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The task predictor determines the value of the downstream label {cross}</span>
+<span class="n">y_predictor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">n_concepts</span><span class="p">,</span> <span class="n">latent_dims</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">latent_dims</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="c1"># output shape 1 as it is a binary task</span>
+<span class="p">)</span>
+<span class="n">y_predictor</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sequential(
+  (0): Linear(in_features=4, out_features=32, bias=True)
+  (1): LeakyReLU(negative_slope=0.01)
+  (2): Linear(in_features=32, out_features=1, bias=True)
+)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-4-train-the-cbm">
+<h3><span class="section-number">2.2.4. </span>Step #4: Train the CBM<a class="headerlink" href="#step-4-train-the-cbm" title="Permalink to this heading">#</a></h3>
+<p>We set the training parameters, including the number of epochs (<code class="docutils literal notranslate"><span class="pre">n_epochs</span></code>), the batch size (<code class="docutils literal notranslate"><span class="pre">batch_size</span></code>) and learning rate (<code class="docutils literal notranslate"><span class="pre">lr</span></code>). Using the AdamW optimizer and Binary Cross-Entropy Loss, we train the CBM through a standard PyTorch loop. Here we will train the model using its <strong>joint</strong> training, where the concept encoder and the label predictor are trained in an end-to-end manner.</p>
+<p>Specifically, in each epoch the model performs a forward pass to predict concepts and the final decision, computes the combined loss, performs backpropagation, and updates the model parameters. The concept regularization weight (<code class="docutils literal notranslate"><span class="pre">concept_loss_weight</span></code>) controls the weight of the concept loss w.r.t. the downstream task loss:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span>
+
+<span class="n">n_epochs</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">concept_loss_weight</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">lr</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">50</span>
+
+<span class="c1"># Define optimizer and loss function</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">encoder</span><span class="p">,</span> <span class="n">c_layer</span><span class="p">,</span> <span class="n">y_predictor</span><span class="p">)</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">)</span>
+<span class="n">loss_fn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">BCELoss</span><span class="p">()</span>
+
+<span class="c1"># Make a batch dataset loader</span>
+<span class="n">dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+    <span class="n">dataset</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+    <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">drop_last</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Standard PyTorch learning cycle</span>
+<span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">batch_idx</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dataloader</span><span class="p">):</span>
+        <span class="c1"># Encode input, then predict concept and downstream tasks activations</span>
+        <span class="n">emb</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">c_pred</span> <span class="o">=</span> <span class="n">c_layer</span><span class="p">(</span><span class="n">emb</span><span class="p">)</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">()</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">y_predictor</span><span class="p">(</span><span class="n">c_pred</span><span class="p">)</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Double loss on concepts and tasks</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="n">concept_loss_weight</span> <span class="o">*</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">c_pred</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+
+        <span class="c1"># Perform the update</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+        <span class="n">task_acc</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(((</span><span class="n">y_pred</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">==</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">))</span>
+        <span class="n">task_acc</span> <span class="o">=</span> <span class="n">task_acc</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">batch_idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Epoch [</span><span class="si">{</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">n_epochs</span><span class="si">}</span><span class="s2">], &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Step [</span><span class="si">{</span><span class="n">batch_idx</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dataloader</span><span class="p">)</span><span class="si">}</span><span class="s2">], &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Loss: </span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Task Accuracy: </span><span class="si">{</span><span class="n">task_acc</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%, &quot;</span>
+            <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch [5/20], Step [1/6], Loss: 3.3699, Task Accuracy: 82.00%, 
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch [10/20], Step [1/6], Loss: 1.8929, Task Accuracy: 96.00%, 
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch [15/20], Step [1/6], Loss: 1.2713, Task Accuracy: 94.00%, 
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch [20/20], Step [1/6], Loss: 0.6090, Task Accuracy: 100.00%, 
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-5-trace-task-prediction-back-to-concept-activations">
+<h3><span class="section-number">2.2.5. </span>Step #5: Trace task prediction back to concept activations<a class="headerlink" href="#step-5-trace-task-prediction-back-to-concept-activations" title="Permalink to this heading">#</a></h3>
+<p>We can examine how the concept activations (green light and ambulance presence) influence the downstream task prediction.</p>
+<p>For example, let’s look at a sample where there is a green light for the car,
+there are no ambulances, and no cars in the intersection. For this, we will
+first find an example in the training set that has all these properties:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load the data to memory for easy use (we would not recommend doing this for</span>
+<span class="c1"># large datasets!):</span>
+<span class="n">x_samples</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">c_samples</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">y_samples</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="n">dataset</span><span class="p">:</span>
+    <span class="n">x_samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">y_samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">c_samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">x_samples</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">x_samples</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">y_samples</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">y_samples</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">c_samples</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">c_samples</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Find all training examples where the light is green, there is no ambulance,</span>
+<span class="c1"># and there are no cars in the intersection:</span>
+<span class="n">samples_with_green_light</span> <span class="o">=</span> <span class="p">(</span><span class="n">c_samples</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+<span class="n">samples_with_int_cars</span> <span class="o">=</span> <span class="p">(</span><span class="n">c_samples</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+<span class="n">samples_with_ambulance</span> <span class="o">=</span> <span class="p">(</span><span class="n">c_samples</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+<span class="n">samples_with_perp_ambulance</span> <span class="o">=</span> <span class="p">(</span><span class="n">c_samples</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+<span class="n">selected_samples</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">samples_with_green_light</span> <span class="o">&amp;</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">samples_with_int_cars</span><span class="p">)</span> <span class="o">&amp;</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">samples_with_ambulance</span><span class="p">)</span> <span class="o">&amp;</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">samples_with_perp_ambulance</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;Found&quot;</span><span class="p">,</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">selected_samples</span><span class="p">),</span>
+    <span class="s2">&quot;samples with green light, no ambulance, and no cars on the intersection&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Found 82 samples with green light, no ambulance, and no cars on the intersection
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1"># Select one of those examples for visualization:</span>
+<span class="n">selected_sample</span> <span class="o">=</span> <span class="n">x_samples</span><span class="p">[</span><span class="n">selected_samples</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">selected_label</span> <span class="o">=</span> <span class="n">y_samples</span><span class="p">[</span><span class="n">selected_samples</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">label_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;stop&#39;</span><span class="p">,</span> <span class="s1">&#39;continue&#39;</span><span class="p">]</span>
+
+<span class="c1"># And visualize it</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+    <span class="n">selected_sample</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;Label: </span><span class="si">{</span><span class="n">label_names</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">selected_label</span><span class="p">)]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/afa6af75af975c6d0339807d1ef95cc2d84440207b9b276d34a5a9a38a2b8743.png" src="../_images/afa6af75af975c6d0339807d1ef95cc2d84440207b9b276d34a5a9a38a2b8743.png" />
+</div>
+</div>
+<p>Now, let’s look at our model’s predictions for this sample:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="n">emb</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">selected_sample</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">c_pred</span> <span class="o">=</span> <span class="n">c_layer</span><span class="p">(</span><span class="n">emb</span><span class="p">)</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">()</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">y_predictor</span><span class="p">(</span><span class="n">c_pred</span><span class="p">)</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Task Prediction: </span><span class="si">{</span><span class="n">label_names</span><span class="p">[(</span><span class="n">y_pred</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">0.5</span><span class="p">)]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">concept_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">concept_names</span><span class="p">):</span>
+    <span class="n">pred_str</span> <span class="o">=</span> <span class="s2">&quot;ON&quot;</span> <span class="k">if</span> <span class="n">c_pred</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span> <span class="k">else</span> <span class="s2">&quot;OFF&quot;</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">Our model predicted concept &#39;</span><span class="si">{</span><span class="n">concept_name</span><span class="si">}</span><span class="s2">&#39; to be </span><span class="si">{</span><span class="n">pred_str</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;(with prob </span><span class="si">{</span><span class="n">c_pred</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">idx</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Task Prediction: continue
+	Our model predicted concept &#39;green light on selected lane&#39; to be ON (with prob 0.9999604225158691)
+	Our model predicted concept &#39;car in intersection&#39; to be OFF (with prob 0.01809137873351574)
+	Our model predicted concept &#39;ambulance seen&#39; to be OFF (with prob 3.915355136996368e-06)
+	Our model predicted concept &#39;ambulance approaching perpendicular to selected car&#39; to be OFF (with prob 1.5054481082188431e-05)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The model correctly identifies that the traffic light is green and there is no ambulance or cars in the intersection! This can be used as an explanation for why the model decided the car, coming from the left, to cross (task prediction is <code class="docutils literal notranslate"><span class="pre">continue</span></code>).</p>
+</section>
+<section id="step-6-change-concept-activations-to-affect-task-predictions">
+<h3><span class="section-number">2.2.6. </span>Step #6: Change concept activations to affect task predictions<a class="headerlink" href="#step-6-change-concept-activations-to-affect-task-predictions" title="Permalink to this heading">#</a></h3>
+<p>Finally, we alter the concept activations to different values and observe how these changes influence the downstream task prediction. This demonstrates how the model’s decisions are directly tied to specific concept activations.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Intervene changing the value of the concepts &quot;ambulance&quot; and</span>
+<span class="c1"># &quot;ambulance approaching perpendicular to selected car&quot; to True</span>
+<span class="n">c_intervened</span> <span class="o">=</span> <span class="n">c_pred</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">c_intervened</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># Ambulance set to True</span>
+<span class="n">c_intervened</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># Ambulance in perpendicular direction set to True</span>
+
+<span class="c1"># Compute new task prediction</span>
+<span class="n">y_intervened</span> <span class="o">=</span> <span class="n">y_predictor</span><span class="p">(</span><span class="n">c_intervened</span><span class="p">)</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Task Prediction: </span><span class="si">{</span><span class="n">label_names</span><span class="p">[(</span><span class="n">y_intervened</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">0.5</span><span class="p">)]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">concept_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">concept_names</span><span class="p">):</span>
+    <span class="n">pred_str</span> <span class="o">=</span> <span class="s2">&quot;ON&quot;</span> <span class="k">if</span> <span class="n">c_intervened</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span> <span class="k">else</span> <span class="s2">&quot;OFF&quot;</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">Our model predicted concept &#39;</span><span class="si">{</span><span class="n">concept_name</span><span class="si">}</span><span class="s2">&#39; to be </span><span class="si">{</span><span class="n">pred_str</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;(with prob </span><span class="si">{</span><span class="n">c_intervened</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">idx</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Task Prediction: stop
+	Our model predicted concept &#39;green light on selected lane&#39; to be ON (with prob 0.9999604225158691)
+	Our model predicted concept &#39;car in intersection&#39; to be OFF (with prob 0.01809137873351574)
+	Our model predicted concept &#39;ambulance seen&#39; to be ON (with prob 1.0)
+	Our model predicted concept &#39;ambulance approaching perpendicular to selected car&#39; to be ON (with prob 1.0)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The model effectively reacts to the concept intervention<sup>1</sup> predicting that, in the presence of a <code class="docutils literal notranslate"><span class="pre">green</span> <span class="pre">light</span></code> and of an ambulance in the direction perpendicular to it, the car should stop (task prediction is <code class="docutils literal notranslate"><span class="pre">0</span></code>).</p>
+<p>More interestingly, perhaps, we can look at what happens when there is an ambulance, but it is moving on the same axis as the target car (and therefore we wouldn’t expect it to have to stop at a green light):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Intervene changing the value of the concepts &quot;ambulance&quot; and</span>
+<span class="c1"># &quot;ambulance approaching perpendicular to selected car&quot; to False</span>
+<span class="n">c_intervened</span> <span class="o">=</span> <span class="n">c_pred</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">c_intervened</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># Ambulance set to True</span>
+<span class="n">c_intervened</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># Ambulance in perpendicular direction set to False</span>
+
+<span class="c1"># Compute new task prediction</span>
+<span class="n">y_intervened</span> <span class="o">=</span> <span class="n">y_predictor</span><span class="p">(</span><span class="n">c_intervened</span><span class="p">)</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Task Prediction: </span><span class="si">{</span><span class="n">label_names</span><span class="p">[(</span><span class="n">y_intervened</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">0.5</span><span class="p">)]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">concept_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">concept_names</span><span class="p">):</span>
+    <span class="n">pred_str</span> <span class="o">=</span> <span class="s2">&quot;ON&quot;</span> <span class="k">if</span> <span class="n">c_intervened</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span> <span class="k">else</span> <span class="s2">&quot;OFF&quot;</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">Our model predicted concept &#39;</span><span class="si">{</span><span class="n">concept_name</span><span class="si">}</span><span class="s2">&#39; to be </span><span class="si">{</span><span class="n">pred_str</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;(with prob </span><span class="si">{</span><span class="n">c_intervened</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">idx</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Task Prediction: continue
+	Our model predicted concept &#39;green light on selected lane&#39; to be ON (with prob 0.9999604225158691)
+	Our model predicted concept &#39;car in intersection&#39; to be OFF (with prob 0.01809137873351574)
+	Our model predicted concept &#39;ambulance seen&#39; to be ON (with prob 1.0)
+	Our model predicted concept &#39;ambulance approaching perpendicular to selected car&#39; to be OFF (with prob 0.0)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here we see that the model decides to <code class="docutils literal notranslate"><span class="pre">continue</span></code>, providing further evidence that the model is indeed properly capturing the expected reasoning for this setup!</p>
+</section>
+</section>
+<section id="take-home-message">
+<h2><span class="section-number">2.3. </span>Take home message<a class="headerlink" href="#take-home-message" title="Permalink to this heading">#</a></h2>
+<p>In summary, in this chapter we demonstrated how to implement Concept Bottleneck Models (CBMs). These models are inherently explainable as:</p>
+<ul class="simple">
+<li><p><strong>Task predictions can be traced back to the activation of human-interpretable concepts</strong>. This enables the model to answer the driving evaluator’s question by saying, “I decided to cross as I saw a green light and there was no ambulance”.</p></li>
+<li><p><strong>Altering concept values changes the model’s decisions</strong>. This allows the model to respond to the evaluator’s question with, “In the same scenario, if there is an ambulance, I would cross”.</p></li>
+</ul>
+<p>The <a class="reference internal" href="chapter03_metrics.html"><span class="doc std std-doc">next chapter</span></a> will discuss key metrics used in concept-based interpretability to quantitatively evaluate CBM performance.</p>
+<p><strong>Bibliography</strong></p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://arxiv.org/abs/2007.04612">Koh, Pang Wei, et al. “Concept Bottleneck Models.” International conference on machine learning. PMLR, 2020</a>.</p></li>
+<li><p><a class="reference external" href="https://arxiv.org/abs/1711.11279">Kim, Been, et al. “Interpretability Beyond Feature Attribution: Quantitative Testing With Concept Activation Vectors (TCAV).” International conference on machine learning. PMLR, 2018.</a></p></li>
+</ul>
+<hr class="docutils" />
+<p><sup>1</sup>: The ability of CBMs in responding to concept interventions can be used to improve the model’s performance by making human experts fix mispredicted concepts. This topic will be discussed in detail in Chapter 3.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./part01_intro"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="chapter01_teaser.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">1. </span>The tale of the deep learning model that failed my driving exam</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="chapter03_metrics.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">3. </span>Quantitative metrics in concept interpretability</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blueprint-for-concept-based-deep-learning-models">2.1. Blueprint for concept-based deep learning models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coding-practice">2.2. Coding practice</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-install-pyc">2.2.1. Step #1: Install PyC</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-load-traffic-scenario">2.2.2. Step #2: Load traffic scenario</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-define-the-cbm">2.2.3. Step #3: Define the CBM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-train-the-cbm">2.2.4. Step #4: Train the CBM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-5-trace-task-prediction-back-to-concept-activations">2.2.5. Step #5: Trace task prediction back to concept activations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-6-change-concept-activations-to-affect-task-predictions">2.2.6. Step #6: Change concept activations to affect task predictions</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#take-home-message">2.3. Take home message</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The PyC Team
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
